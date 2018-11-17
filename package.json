@@ -1,0 +1,61 @@
+{
+  "name": "asyncoperationsmanager",
+  "version": "1.0.0",
+  "description": "A library to generate and represent stateful metaData of an async request and as an 'operation'.   ",
+  "main": "index.js",
+  "scripts": {
+    "babel-transpile": "npx babel src --out-dir lib",
+    "test": "npm run babel-transpile && npx jest lib"
+  },
+  "keywords": [
+    "operation",
+    "async",
+    "fetch",
+    "get",
+    "pull",
+    "put",
+    "state",
+    "metaData",
+    "request",
+    "xhr",
+    "post",
+    "redux",
+    "mobx",
+    "flux"
+  ],
+  "author": "Darien Lombardi https://github.com/dlombardi",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/polyfill": "^7.0.0",
+    "lodash": "^4.17.11",
+    "prop-types": "^15.6.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/preset-react": "^7.0.0",
+    "babel": "^6.23.0",
+    "babel-jest": "^23.6.0",
+    "babel-polyfill": "^6.26.0",
+    "chai": "^4.2.0",
+    "chai-jest-snapshot": "^2.0.0",
+    "jasmine-reporters": "^2.3.2",
+    "jest": "^23.6.0",
+    "mocha": "^5.2.0",
+    "sinon": "^7.1.1"
+  },
+  "jest": {
+    "cacheDirectory": "unit-tests/.jest-cache/",
+    "coverageDirectory": "unit-tests/coverage/",
+    "coveragePathIgnorePatterns": [
+      "/__tests__/",
+      "/unit-tests/"
+    ],
+    "setupTestFrameworkScriptFile": "./unit-tests/setupTestFramework",
+    "testPathIgnorePatterns": [
+      "/e2e-tests/",
+      "/node_modules/"
+    ]
+  }
+}

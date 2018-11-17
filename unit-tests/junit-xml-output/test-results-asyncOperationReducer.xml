@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites disabled="0" errors="0" failures="0" tests="7" time="0.028">
+ <testsuite name="asyncOperationReducer" timestamp="2018-11-17T12:52:53" hostname="localhost" time="0.028" errors="0" tests="7" skipped="0" disabled="0" failures="0">
+  <testcase classname="asyncOperationReducer" name="should return the initial state" time="0.007" />
+  <testcase classname="asyncOperationReducer" name="should handle BEGIN_ASYNC_OPERATION for write action" time="0.012" />
+  <testcase classname="asyncOperationReducer" name="should handle RESOLVE_ASYNC_OPERATION for write action" time="0.002" />
+  <testcase classname="asyncOperationReducer" name="should handle REJECT_ASYNC_OPERATION for write action" time="0.001" />
+  <testcase classname="asyncOperationReducer" name="should handle BEGIN_ASYNC_OPERATION for read action" time="0.002" />
+  <testcase classname="asyncOperationReducer" name="should handle RESOLVE_ASYNC_OPERATION for read action" time="0.001" />
+  <testcase classname="asyncOperationReducer" name="should handle REJECT_ASYNC_OPERATION for write action" time="0.002" />
+ </testsuite>
+</testsuites>

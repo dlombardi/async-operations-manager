@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`asyncOperationReducer should handle BEGIN_ASYNC_OPERATION for read action: well formed state for begun read async operation 1`] = `
+Object {
+  "FETCH_PERSON_DATA_111": Object {
+    "dataStatus": "ABSENT",
+    "descriptorId": "FETCH_PERSON_DATA",
+    "fetchStatus": "PENDING",
+    "lastDataStatusTime": 0,
+    "lastFetchStatusTime": 1530518207007,
+    "message": null,
+    "personId": 111,
+  },
+}
+`;
+
+exports[`asyncOperationReducer should handle BEGIN_ASYNC_OPERATION for write action: well formed state for begun write async operation 1`] = `
+Object {
+  "UPDATE_PERSON_DATA_111": Object {
+    "descriptorId": "UPDATE_PERSON_DATA",
+    "fetchStatus": "PENDING",
+    "lastFetchStatusTime": 1530518207007,
+    "message": null,
+    "personId": 111,
+  },
+}
+`;
+
+exports[`asyncOperationReducer should handle REJECT_ASYNC_OPERATION for write action: well formed state for rejected read async operation 1`] = `
+Object {
+  "UPDATE_PERSON_DATA_111": Object {
+    "actionType": "UPDATE_PERSON_DATA",
+    "descriptorId": "UPDATE_PERSON_DATA",
+    "fetchStatus": "FAILED",
+    "lastFetchStatusTime": 1530518207007,
+    "message": null,
+    "operationStep": "REJECT_ASYNC_OPERATION",
+    "personId": 111,
+    "type": "AOM//REJECT__UPDATE_PERSON_DATA",
+  },
+}
+`;
+
+exports[`asyncOperationReducer should handle REJECT_ASYNC_OPERATION for write action: well formed state for rejected write async operation 1`] = `
+Object {
+  "FETCH_PERSON_DATA_111": Object {
+    "actionType": "FETCH_PERSON_DATA",
+    "descriptorId": "FETCH_PERSON_DATA",
+    "fetchStatus": "FAILED",
+    "lastFetchStatusTime": 1530518207007,
+    "message": null,
+    "operationStep": "REJECT_ASYNC_OPERATION",
+    "personId": 111,
+    "type": "AOM//REJECT__FETCH_PERSON_DATA",
+  },
+}
+`;
+
+exports[`asyncOperationReducer should handle RESOLVE_ASYNC_OPERATION for read action: well formed state for resolved read async operation 1`] = `
+Object {
+  "FETCH_PERSON_DATA_111": Object {
+    "actionType": "FETCH_PERSON_DATA",
+    "dataStatus": "PRESENT",
+    "descriptorId": "FETCH_PERSON_DATA",
+    "fetchStatus": "SUCCESSFUL",
+    "lastDataStatusTime": 1530518207007,
+    "lastFetchFailed": false,
+    "lastFetchStatusTime": 1530518207007,
+    "message": null,
+    "operationStep": "RESOLVE_ASYNC_OPERATION",
+    "personId": 111,
+    "type": "AOM//RESOLVE__FETCH_PERSON_DATA",
+  },
+}
+`;
+
+exports[`asyncOperationReducer should handle RESOLVE_ASYNC_OPERATION for write action: well formed state for resolved write async operation 1`] = `
+Object {
+  "UPDATE_PERSON_DATA_111": Object {
+    "actionType": "UPDATE_PERSON_DATA",
+    "descriptorId": "UPDATE_PERSON_DATA",
+    "fetchStatus": "SUCCESSFUL",
+    "lastFetchStatusTime": 1530518207007,
+    "message": null,
+    "operationStep": "RESOLVE_ASYNC_OPERATION",
+    "personId": 111,
+    "type": "AOM//RESOLVE__UPDATE_PERSON_DATA",
+  },
+}
+`;
