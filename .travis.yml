@@ -6,4 +6,4 @@ node_js:
 install:
   - "npm ci"
 script:
-  - "npm run test"
+  - "npm run unit-tests"
