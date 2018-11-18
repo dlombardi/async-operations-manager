@@ -1,7 +1,7 @@
 // @flow
 // TODO: JSDocify every function
 
-import _ from 'lodash';
+import { pick } from 'lodash';
 
 import {
   readAsyncOperationFieldsToPullFromParent,
@@ -59,9 +59,6 @@ const initialWriteAsyncOperation = {
   lastFetchStatusTime: 0,
 };
 
-// BUT TWFetchData needs an descriptorId, so we'll export a helper that gives you that.
-// This is really just syntactic sugar, but requiring people to use this ensures that
-// we always have descriptorId.
 // Note that we'll pull in any status (dataStatus, fetchStatus, etc) from the parent
 // operation (which *should* be fetchAllBeveragesForOrg) to seed the initial status.
 const initialReadAsyncOperationForAction = (
@@ -70,7 +67,7 @@ const initialReadAsyncOperationForAction = (
   parentAsyncOperation = null
 ) => ({
   ...initialReadAsyncOperation,
-  ...(parentAsyncOperation ? _.pick(parentAsyncOperation, readAsyncOperationFieldsToPullFromParent) : {}),
+  ...(parentAsyncOperation ? pick(parentAsyncOperation, readAsyncOperationFieldsToPullFromParent) : {}),
   ...fieldsToAdd,
   descriptorId,
 });

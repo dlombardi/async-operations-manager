@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { includes } from 'lodash';
 
 import { getStateForOperationAfterStep } from '../asyncOperationManagerUtils';
 
@@ -7,7 +7,7 @@ import {
 } from '../constants';
 
 function asyncOperationReducer(state = {}, action) {
-  if (_.includes(ASYNC_OPERATION_STEPS, action.operationStep) && action.descriptorId) {
+  if (includes(ASYNC_OPERATION_STEPS, action.operationStep) && action.descriptorId) {
     return {
       ...state,
       ...getStateForOperationAfterStep(state, action.operationStep, action.descriptorId, action),

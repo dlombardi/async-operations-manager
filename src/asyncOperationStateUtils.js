@@ -1,6 +1,6 @@
 
 // TODO: JSDocify every function
-import _ from 'lodash';
+import { pick, reduce } from 'lodash';
 import PropTypes from 'prop-types';
 
 import asyncOperationManagerConfig from './config';
@@ -117,7 +117,7 @@ const getAsyncOperation = (state, registeredAsyncOperationDescriptors, asyncOper
       ? {
         ...asyncOperation,
         // use parent async operation metaData (lastDataStatusTime, lastFetchStatusTime. etc...)
-        ..._.pick(parentAsyncOperation, readAsyncOperationFieldsToPullFromParent),
+        ...pick(parentAsyncOperation, readAsyncOperationFieldsToPullFromParent),
       }
       : asyncOperation;
   }
@@ -146,7 +146,7 @@ const updateAsyncOperation = (state, asyncOperationKey, asyncOperation, asyncOpe
 };
 
 const bulkUpdateAsyncOperations = (state, asyncOperationsList) => {
-  return _.reduce(asyncOperationsList, (accumulator, { asyncOperationKey, asyncOperation, asyncOperationDescriptor }) => {
+  return reduce(asyncOperationsList, (accumulator, { asyncOperationKey, asyncOperation, asyncOperationDescriptor }) => {
     return updateAsyncOperation(accumulator, asyncOperationKey, asyncOperation, asyncOperationDescriptor);
   }, state);
 };
