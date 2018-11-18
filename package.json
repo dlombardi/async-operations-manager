@@ -5,6 +5,7 @@
   "scripts": {
     "babel-transpile": "npx babel src --out-dir lib",
     "unit-tests": "npm run babel-transpile && npx jest lib",
+    "ci-tests": "npm run babel-transpile && npx jest -u lib",
     "coverage": "nyc mocha --require @babel/register src/",
     "lint": "eslint .",
     "sendCoverage": "nyc report --reporter=text-lcov | coveralls"
