@@ -2,11 +2,28 @@
   "name": "asyncoperationsmanager",
   "version": "1.0.0",
   "description": "A library to generate and represent stateful metaData of an async request and as an 'operation'.   ",
-  "main": "index.js",
   "scripts": {
     "babel-transpile": "npx babel src --out-dir lib",
-    "test": "npm run babel-transpile && npx jest lib"
+    "unit-tests": "npm run babel-transpile && npx jest lib",
+    "coverage": "nyc mocha --require @babel/register src/",
+    "lint": "eslint .",
+    "sendCoverage": "nyc report --reporter=text-lcov | coveralls"
   },
+  "author": "Darien Lombardi https://github.com/dlombardi",
+  "license": "MIT",
+  "main": "src/index.js",
+  "jsnext:main": "src/index.js",
+  "module": "src/index.js",
+  "bugs": {
+    "url": "https://github.com/dlombardi/async-operations-manager/issues"
+  },
+  "directories": {
+    "src": "src",
+    "test": "test"
+  },
+  "files": [
+    "src"
+  ],
   "keywords": [
     "operation",
     "async",
@@ -23,28 +40,6 @@
     "mobx",
     "flux"
   ],
-  "author": "Darien Lombardi https://github.com/dlombardi",
-  "license": "MIT",
-  "dependencies": {
-    "@babel/polyfill": "^7.0.0",
-    "lodash": "^4.17.11",
-    "prop-types": "^15.6.2"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.1.5",
-    "@babel/core": "^7.1.6",
-    "@babel/preset-env": "^7.1.6",
-    "@babel/preset-react": "^7.0.0",
-    "babel": "^6.23.0",
-    "babel-jest": "^23.6.0",
-    "babel-polyfill": "^6.26.0",
-    "chai": "^4.2.0",
-    "chai-jest-snapshot": "^2.0.0",
-    "jasmine-reporters": "^2.3.2",
-    "jest": "^23.6.0",
-    "mocha": "^5.2.0",
-    "sinon": "^7.1.1"
-  },
   "jest": {
     "cacheDirectory": "unit-tests/.jest-cache/",
     "coverageDirectory": "unit-tests/coverage/",
@@ -57,5 +52,30 @@
       "/e2e-tests/",
       "/node_modules/"
     ]
-  }
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.0.0",
+    "lodash": "^4.17.11",
+    "prop-types": "^15.6.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.1.6",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/register": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.4.2",
+    "chai": "^4.2.0",
+    "chai-jest-snapshot": "^2.0.0",
+    "coveralls": "^3.0.2",
+    "eslint": "^5.9.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "jasmine-reporters": "^2.3.2",
+    "jest": "^23.6.0",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "sinon": "^7.1.1"
+  },
 }

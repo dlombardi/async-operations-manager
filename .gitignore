@@ -1,2 +1,10 @@
-/node_modules/
+*~
+.DS_Store
+.idea
+.nyc_output
+.vscode
+*.log*
+*.swp
+
 /lib/
+/node_modules/
