@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites disabled="0" errors="0" failures="0" tests="9" time="0.069">
- <testsuite name="asyncOperationManagerUtils" timestamp="2018-11-18T18:22:04" hostname="localhost" time="0.028" errors="0" tests="0" skipped="0" disabled="0" failures="0">
+<testsuites disabled="0" errors="0" failures="0" tests="9" time="0.179">
+ <testsuite name="asyncOperationManagerUtils" timestamp="2018-11-18T18:30:05" hostname="localhost" time="0.069" errors="0" tests="0" skipped="0" disabled="0" failures="0">
  </testsuite>
- <testsuite name="asyncOperationManagerUtils.registerAsyncOperationDescriptors" timestamp="2018-11-18T18:22:04" hostname="localhost" time="0.01" errors="0" tests="2" skipped="0" disabled="0" failures="0">
-  <testcase classname="asyncOperationManagerUtils.registerAsyncOperationDescriptors" name="should accept object argument to register one async operation decriptor to state" time="0.007" />
-  <testcase classname="asyncOperationManagerUtils.registerAsyncOperationDescriptors" name="should accept array argument to register multiple async operation descriptors to state" time="0" />
+ <testsuite name="asyncOperationManagerUtils.registerAsyncOperationDescriptors" timestamp="2018-11-18T18:30:05" hostname="localhost" time="0.017" errors="0" tests="2" skipped="0" disabled="0" failures="0">
+  <testcase classname="asyncOperationManagerUtils.registerAsyncOperationDescriptors" name="should accept object argument to register one async operation decriptor to state" time="0.013" />
+  <testcase classname="asyncOperationManagerUtils.registerAsyncOperationDescriptors" name="should accept array argument to register multiple async operation descriptors to state" time="0.002" />
  </testsuite>
- <testsuite name="asyncOperationManagerUtils.getAsyncOperationDescriptor" timestamp="2018-11-18T18:22:04" hostname="localhost" time="0.005" errors="0" tests="1" skipped="0" disabled="0" failures="0">
-  <testcase classname="asyncOperationManagerUtils.getAsyncOperationDescriptor" name="should successfully return a registered asyncOperationDescriptor" time="0.005" />
+ <testsuite name="asyncOperationManagerUtils.getAsyncOperationDescriptor" timestamp="2018-11-18T18:30:05" hostname="localhost" time="0.011" errors="0" tests="1" skipped="0" disabled="0" failures="0">
+  <testcase classname="asyncOperationManagerUtils.getAsyncOperationDescriptor" name="should successfully return a registered asyncOperationDescriptor" time="0.011" />
  </testsuite>
- <testsuite name="asyncOperationManagerUtils.getStateForOperationAfterStep" timestamp="2018-11-18T18:22:04" hostname="localhost" time="0.013" errors="0" tests="0" skipped="0" disabled="0" failures="0">
+ <testsuite name="asyncOperationManagerUtils.getStateForOperationAfterStep" timestamp="2018-11-18T18:30:05" hostname="localhost" time="0.041" errors="0" tests="0" skipped="0" disabled="0" failures="0">
  </testsuite>
- <testsuite name="asyncOperationManagerUtils.getStateForOperationAfterStep.READ async operations" timestamp="2018-11-18T18:22:04" hostname="localhost" time="0.009" errors="0" tests="3" skipped="0" disabled="0" failures="0">
-  <testcase classname="asyncOperationManagerUtils.getStateForOperationAfterStep.READ async operations" name="should update state to read show async operation as pending state from initial state" time="0.007" />
-  <testcase classname="asyncOperationManagerUtils.getStateForOperationAfterStep.READ async operations" name="should update state to read show async operation as successful state from pending state" time="0.001" />
-  <testcase classname="asyncOperationManagerUtils.getStateForOperationAfterStep.READ async operations" name="should update state to read show async operation as failed state from pending state" time="0.001" />
+ <testsuite name="asyncOperationManagerUtils.getStateForOperationAfterStep.READ async operations" timestamp="2018-11-18T18:30:05" hostname="localhost" time="0.035" errors="0" tests="3" skipped="0" disabled="0" failures="0">
+  <testcase classname="asyncOperationManagerUtils.getStateForOperationAfterStep.READ async operations" name="should update state to read show async operation as pending state from initial state" time="0.029" />
+  <testcase classname="asyncOperationManagerUtils.getStateForOperationAfterStep.READ async operations" name="should update state to read show async operation as successful state from pending state" time="0.003" />
+  <testcase classname="asyncOperationManagerUtils.getStateForOperationAfterStep.READ async operations" name="should update state to read show async operation as failed state from pending state" time="0.002" />
  </testsuite>
- <testsuite name="asyncOperationManagerUtils.getStateForOperationAfterStep.WRITE async operations" timestamp="2018-11-18T18:22:04" hostname="localhost" time="0.004" errors="0" tests="3" skipped="0" disabled="0" failures="0">
+ <testsuite name="asyncOperationManagerUtils.getStateForOperationAfterStep.WRITE async operations" timestamp="2018-11-18T18:30:05" hostname="localhost" time="0.006" errors="0" tests="3" skipped="0" disabled="0" failures="0">
   <testcase classname="asyncOperationManagerUtils.getStateForOperationAfterStep.WRITE async operations" name="should update state to show write async operation as pending state from initial state" time="0.002" />
-  <testcase classname="asyncOperationManagerUtils.getStateForOperationAfterStep.WRITE async operations" name="should update state to show write async operation as successful state from pending state" time="0.001" />
-  <testcase classname="asyncOperationManagerUtils.getStateForOperationAfterStep.WRITE async operations" name="should update state to show write async operation as failed state from pending state" time="0.001" />
+  <testcase classname="asyncOperationManagerUtils.getStateForOperationAfterStep.WRITE async operations" name="should update state to show write async operation as successful state from pending state" time="0.002" />
+  <testcase classname="asyncOperationManagerUtils.getStateForOperationAfterStep.WRITE async operations" name="should update state to show write async operation as failed state from pending state" time="0.002" />
  </testsuite>
 </testsuites>
