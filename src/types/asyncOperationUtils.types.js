@@ -1,27 +1,7 @@
-// @flow
 
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { FETCH_STATUS, DATA_STATUS, ASYNC_OPERATION_TYPES } from '../constants';
-
-/**
- * Flow types!
- */
-// type asyncOperationType = {
-//   fetchStatus: 'NULL' | 'PENDING' | 'SUCCESSFUL' | 'FAILED',
-//   dataStatus: 'ABSENT' | 'PRESENT',
-//   message: any,
-//   lastFetchStatusTime: string,
-//   lastDataStatusTime: string,
-//   actionType: string,
-// };
-
-// type asyncOperationDescriptorType = {
-//   descriptorId: string,
-//   requiredParams: any,   // label + params make the key automatically
-//   parentOperationDescriptorId: string, // trivial case: just reference by name
-//   operationType: 'READ' | 'WRITE',
-// };
 
 /**
  * PropTypes!
@@ -42,8 +22,3 @@ export const asyncOperationDescriptorPropType = {
   parentOperationDescriptorId: PropTypes.string,
   operationType: PropTypes.oneOf(_.values(ASYNC_OPERATION_TYPES)).isRequired,
 };
-
-// export type {
-//   asyncOperationType,
-//   asyncOperationDescriptorType,
-// };

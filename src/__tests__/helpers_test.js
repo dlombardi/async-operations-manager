@@ -119,12 +119,7 @@ describe('helpers', () => {
 
     it('should make a constants object that is immutable', () => {
       const fruits = makeConstantsObject(['APPLE', 'BANANA']);
-      fruits.APPLE = 'PEAR';
-      fruits.ORANGE = 'ORANGE';
-      expect(fruits).to.deep.equal({
-        APPLE: 'APPLE',
-        BANANA: 'BANANA',
-      });
+      expect(Object.isExtensible(fruits)).to.be.false;
     });
   });
 });
