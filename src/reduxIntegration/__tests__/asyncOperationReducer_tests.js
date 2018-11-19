@@ -20,6 +20,7 @@ describe('asyncOperationReducer', () => {
   it('should return the initial state', () => {
     expect(asyncOperationReducer(undefined, {})).to.deep.equal(state);
   });
+
   it('should handle BEGIN_ASYNC_OPERATION for write action', () => {
     const action = {
       descriptorId: 'UPDATE_PERSON_DATA',

@@ -55,7 +55,7 @@ const getAsyncOperationInfo = (descriptorId, params) => {
 };
 
 const registerAsyncOperationDescriptors = (asyncOperationDescriptors, ...otherDescriptors) => {
-  let newAsyncOperationDescriptors;
+  let newState;
   const existingAsyncOperationDescriptors = getRegisteredAsyncDescriptors();
   const config = asyncOperationManagerConfig.getConfig();
 
@@ -66,17 +66,14 @@ const registerAsyncOperationDescriptors = (asyncOperationDescriptors, ...otherDe
   }
   // handle array or single object arguments
   if (isArray(asyncOperationDescriptors)) {
-    newAsyncOperationDescriptors = reduce(asyncOperationDescriptors, (acc, asyncOperationDescriptor) => {
+    newState = reduce(asyncOperationDescriptors, (acc, asyncOperationDescriptor) => {
       return asyncOperationStateUtils.updateAsyncOperationDescriptor(acc, asyncOperationDescriptor);
     }, existingAsyncOperationDescriptors);
   } else {
-    newAsyncOperationDescriptors = asyncOperationStateUtils.updateAsyncOperationDescriptor(existingAsyncOperationDescriptors, asyncOperationDescriptors);
+    newState = asyncOperationStateUtils.updateAsyncOperationDescriptor(existingAsyncOperationDescriptors, asyncOperationDescriptors);
   }
 
-  asyncOperationManagerState.setState({
-    descriptors: newAsyncOperationDescriptors,
-  });
-  return newAsyncOperationDescriptors;
+  return asyncOperationManagerState.setState(newState);
 };
 
 const getAsyncOperation = (state, descriptorId, params, otherFields) => {
@@ -86,9 +83,7 @@ const getAsyncOperation = (state, descriptorId, params, otherFields) => {
     asyncOperationKey,
   } = getAsyncOperationInfo(descriptorId, params);
 
-  const registeredAsyncOperationDescriptors = getRegisteredAsyncDescriptors();
-
-  return asyncOperationStateUtils.getAsyncOperation(state, registeredAsyncOperationDescriptors, asyncOperationKey, asyncOperationDescriptor, asyncOperationParams, otherFields);
+  return asyncOperationStateUtils.getAsyncOperation(state, asyncOperationKey, asyncOperationDescriptor, asyncOperationParams, otherFields);
 };
 
 // switchboard for resolving the Read operation steps
@@ -121,7 +116,7 @@ const transformTypeLookup = {
 
 // this function is called in the reducer (in redux integration)
 const getStateForOperationAfterStep = (state, asyncOperationStep, descriptorId, params) => {
-  let newState = state;
+  let newState;
   const {
     asyncOperationDescriptor,
     asyncOperationParams,
@@ -129,18 +124,14 @@ const getStateForOperationAfterStep = (state, asyncOperationStep, descriptorId, 
     otherFields,
   } = getAsyncOperationInfo(descriptorId, params);
 
-  // set state in case state was initialized from userland
-  if (state) {
-    asyncOperationManagerState.setState(state);    
-  }
 
-  newState = asyncOperationManagerState.getState();
+  newState = asyncOperationManagerState.setState(state);
 
   const asyncOperationToTranform = getAsyncOperation(newState, descriptorId, asyncOperationParams, otherFields);
   const newAsyncOperation = transformTypeLookup[asyncOperationDescriptor.operationType](asyncOperationToTranform, asyncOperationStep, asyncOperationParams, otherFields);
   
-  newState = asyncOperationStateUtils.updateAsyncOperation(state, asyncOperationKey, newAsyncOperation, asyncOperationDescriptor);
-  return newState;
+  newState = asyncOperationStateUtils.updateAsyncOperation(newState, asyncOperationKey, newAsyncOperation, asyncOperationDescriptor);
+  return asyncOperationManagerState.setState(newState).operations;
 };
 
 export {

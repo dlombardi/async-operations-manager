@@ -1,5 +1,7 @@
 // TODO: JSDocify every function
 
+import { get } from 'lodash';
+
 const initialAsyncOperationManagerState = {
   descriptors: {},
   operations: {},
@@ -16,14 +18,16 @@ const asyncOperationManagerState = (() => {
   };
 
   const setState = (newState) => {
+    const newDescriptors = get(newState, 'descriptors', {});
+    const newOperations = get(newState, 'operations', {});
     asyncOperationManagerState = {
       descriptors: {
         ...asyncOperationManagerState.descriptors,
-        ...newState.descriptors,
+        ...newDescriptors,
       },
       operations: {
         ...asyncOperationManagerState.operations,
-        ...newState.operations,
+        ...newOperations,
       }
     };
     return asyncOperationManagerState;
