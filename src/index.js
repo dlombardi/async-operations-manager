@@ -1,10 +1,13 @@
 import {
   getRegisteredAsyncDescriptors,
   clearAsyncOperationsManagerState,
+  setAsyncOperationsManagerState,
+
   getAsyncOperation,
   registerAsyncOperationDescriptors,
   getAsyncOperationDescriptor,
 } from './asyncOperationManagerUtils';
+
 
 import {
   ASYNC_OPERATION_TYPES,
@@ -30,7 +33,9 @@ export default {
   // API //
   getRegisteredAsyncDescriptors,
   clearAsyncOperationsManagerState,
+  setAsyncOperationsManagerState,
   getAsyncOperation,
+
   registerAsyncOperationDescriptors,
   getAsyncOperationDescriptor,
 

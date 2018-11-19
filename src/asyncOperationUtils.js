@@ -64,7 +64,7 @@ const initialWriteAsyncOperation = {
 const initialReadAsyncOperationForAction = (
   descriptorId,
   fieldsToAdd = {},
-  parentAsyncOperation = null
+  parentAsyncOperation = null,
 ) => ({
   ...initialReadAsyncOperation,
   ...(parentAsyncOperation ? pick(parentAsyncOperation, readAsyncOperationFieldsToPullFromParent) : {}),
@@ -74,7 +74,7 @@ const initialReadAsyncOperationForAction = (
 
 const initialWriteAsyncOperationForAction = (
   descriptorId,
-  fieldsToAdd = {}
+  fieldsToAdd = {},
 ) => ({
   ...initialWriteAsyncOperation,
   ...fieldsToAdd,
@@ -90,7 +90,7 @@ const initialWriteAsyncOperationForAction = (
  */
 const beginReadAsyncOperation = (
   previousAsyncOperation = initialReadAsyncOperation,
-  fieldsToAdd = {}
+  fieldsToAdd = {},
 ) => {
   const fieldsForNewAsyncOperation = {
     // We re-initialize the entire operation state (except descriptorId and dataStatus) on __BEGIN.
@@ -113,7 +113,7 @@ const beginReadAsyncOperation = (
 // operation "previousAsyncOperation" we call it "initialAsyncOperation" since its role is different.
 const beginWriteAsyncOperation = (
   initialAsyncOperation = initialWriteAsyncOperation,
-  fieldsToAdd = {}
+  fieldsToAdd = {},
 ) => ({
   descriptorId: initialAsyncOperation.descriptorId,
   fetchStatus: FETCH_STATUS.PENDING,
@@ -128,7 +128,7 @@ const beginWriteAsyncOperation = (
  */
 const resolveReadAsyncOperation = (
   previousAsyncOperation = initialReadAsyncOperation,
-  fieldsToAdd = {}
+  fieldsToAdd = {},
 ) => {
   const currentTime = Date.now();
   const fieldsToUpdate = {
@@ -153,7 +153,7 @@ const resolveReadAsyncOperation = (
 
 const resolveWriteAsyncOperation = (
   previousAsyncOperation = initialReadAsyncOperation,
-  fieldsToAdd = {}
+  fieldsToAdd = {},
 ) => {
   const currentTime = Date.now();
   return {
@@ -172,7 +172,7 @@ const resolveWriteAsyncOperation = (
  */
 const rejectReadAsyncOperation = (
   previousAsyncOperation = initialReadAsyncOperation,
-  fieldsToAdd = {}
+  fieldsToAdd = {},
 ) => ({
   ...previousAsyncOperation,
   fetchStatus: FETCH_STATUS.FAILED,
@@ -183,7 +183,7 @@ const rejectReadAsyncOperation = (
 
 const rejectWriteAsyncOperation = (
   previousAsyncOperation,
-  fieldsToAdd = {}
+  fieldsToAdd = {},
 ) => ({
   ...previousAsyncOperation,
   fetchStatus: FETCH_STATUS.FAILED,

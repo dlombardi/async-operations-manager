@@ -5,8 +5,6 @@ import PropTypes from 'prop-types';
 
 import asyncOperationManagerConfig from './config';
 
-import { asyncOperationManagerState } from './asyncOperationManagerState';
-
 import {
   ASYNC_OPERATION_TYPES,
   readAsyncOperationFieldsToPullFromParent,
@@ -27,6 +25,11 @@ import {
   initialWriteAsyncOperationForAction,
 } from './asyncOperationUtils';
 
+// // //
+// // // These are all pure functions that return new or existing state or
+// // // pieces of new or existing state from their inputs.
+// // //
+
 const updateAsyncOperationDescriptor = (state, descriptorOptions) => {
   const asyncOperationDescriptor = {
     debug: false,
@@ -44,11 +47,12 @@ const updateAsyncOperationDescriptor = (state, descriptorOptions) => {
     descriptors: {
       ...state.descriptors,
       [asyncOperationDescriptor.descriptorId]: asyncOperationDescriptor,
-    }
+    },
   };
 };
 
 // validate whether the asyncOperationDescriptor exists
+
 const getAsyncOperationDescriptor = (asyncOperationDescriptors, descriptorId) => {
   const config = asyncOperationManagerConfig.getConfig();
   const asyncOperationDescriptor = asyncOperationDescriptors[descriptorId];
@@ -149,7 +153,7 @@ const updateAsyncOperation = (state, asyncOperationKey, asyncOperation, asyncOpe
     operations: {
       ...state.operations,
       [asyncOperationKey]: asyncOperation,
-    }
+    },
   };
 };
 

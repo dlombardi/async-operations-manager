@@ -15,7 +15,7 @@ const ASYNC_OPERATION_STEPS = makeConstantsObject([
   'REJECT_ASYNC_OPERATION',
 ]);
 
-const ASYNC_OPERATION_TYPES  = makeConstantsObject([
+const ASYNC_OPERATION_TYPES = makeConstantsObject([
   'READ',
   'WRITE',
 ]);

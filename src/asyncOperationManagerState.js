@@ -5,22 +5,22 @@ import { get } from 'lodash';
 const initialAsyncOperationManagerState = {
   descriptors: {},
   operations: {},
-}
+};
 
 const asyncOperationManagerState = (() => {
-  let asyncOperationManagerState;
+  let state;
 
   const getState = () => {
     if (!asyncOperationManagerState) {
-      asyncOperationManagerState = initialAsyncOperationManagerState;
+      state = initialAsyncOperationManagerState;
     }
     return asyncOperationManagerState;
   };
 
-  const setState = (newState) => {
+  const setState = (newState = {}) => {
     const newDescriptors = get(newState, 'descriptors', {});
     const newOperations = get(newState, 'operations', {});
-    asyncOperationManagerState = {
+    state = {
       descriptors: {
         ...asyncOperationManagerState.descriptors,
         ...newDescriptors,
@@ -28,14 +28,14 @@ const asyncOperationManagerState = (() => {
       operations: {
         ...asyncOperationManagerState.operations,
         ...newOperations,
-      }
+      },
     };
     return asyncOperationManagerState;
   };
 
   const clearState = () => {
-    asyncOperationManagerState = initialAsyncOperationManagerState;
-    return asyncOperationManagerState;
+    state = initialAsyncOperationManagerState;
+    return state;
   };
 
   return {

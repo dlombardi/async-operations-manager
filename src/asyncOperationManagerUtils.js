@@ -6,7 +6,12 @@
 // to the consumer of the library.
 //
 
-import { omit, isArray, isEmpty, reduce } from 'lodash';
+import {
+  omit,
+  isArray,
+  isEmpty,
+  reduce,
+} from 'lodash';
 
 import asyncOperationStateUtils from './asyncOperationStateUtils';
 import asyncOperationManagerConfig from './config';
@@ -34,6 +39,8 @@ import {
 const getRegisteredAsyncDescriptors = () => asyncOperationManagerState.getState().descriptors;
 
 const clearAsyncOperationsManagerState = asyncOperationManagerState.clearState;
+
+const setAsyncOperationsManagerState = asyncOperationManagerState.setState;
 
 const getAsyncOperationDescriptor = (descriptorId) => {
   const asyncOperationDescriptors = getRegisteredAsyncDescriptors();
@@ -138,6 +145,8 @@ const getStateForOperationAfterStep = (state, asyncOperationStep, descriptorId, 
 export {
   getRegisteredAsyncDescriptors,
   clearAsyncOperationsManagerState,
+  setAsyncOperationsManagerState,
+
   getAsyncOperation,
   registerAsyncOperationDescriptors,
   getAsyncOperationDescriptor,
