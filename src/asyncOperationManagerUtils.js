@@ -124,7 +124,8 @@ const getStateForOperationAfterStep = (state, asyncOperationStep, descriptorId, 
     otherFields,
   } = getAsyncOperationInfo(descriptorId, params);
 
-
+  // in case operation/descriptor state is initialized in userland we pass that through
+  // to the library state.
   newState = asyncOperationManagerState.setState(state);
 
   const asyncOperationToTranform = getAsyncOperation(newState, descriptorId, asyncOperationParams, otherFields);
