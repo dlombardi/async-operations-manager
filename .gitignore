@@ -1,3 +1,8 @@
+
+/lib/
+/node_modules/
+/unit-tests/
+
 *~
 .DS_Store
 .idea
@@ -5,7 +10,3 @@
 .vscode
 *.log*
 *.swp
-
-/lib/
-/node_modules/
-/unit-tests/

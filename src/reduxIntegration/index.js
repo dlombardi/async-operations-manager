@@ -5,6 +5,7 @@ import {
   createAsyncOperationBeginAction,
   createAsyncOperationResolveAction,
   createAsyncOperationRejectAction,
+  getActionForAsyncOperation,
 } from './asyncOperationReduxUtils';
 
 export default {
@@ -13,4 +14,5 @@ export default {
   createAsyncOperationResolveAction,
   createAsyncOperationRejectAction,
   asyncOperationReducer,
+  getActionForAsyncOperation,
 };
