@@ -1,6 +1,6 @@
 import {
   getRegisteredAsyncDescriptors,
-  clearRegisteredAsyncDescriptors,
+  clearAsyncOperationsManagerState,
   getAsyncOperation,
   registerAsyncOperationDescriptors,
   getAsyncOperationDescriptor,
@@ -29,7 +29,7 @@ export default {
 
   // API //
   getRegisteredAsyncDescriptors,
-  clearRegisteredAsyncDescriptors,
+  clearAsyncOperationsManagerState,
   getAsyncOperation,
   registerAsyncOperationDescriptors,
   getAsyncOperationDescriptor,

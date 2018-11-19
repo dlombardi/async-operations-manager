@@ -3,8 +3,8 @@ import { expect } from 'chai';
 
 import asyncOperationReducer from '../asyncOperationReducer';
 import {
+  clearAsyncOperationsManagerState,
   registerAsyncOperationDescriptors,
-  clearRegisteredAsyncDescriptors,
 } from '../../asyncOperationManagerUtils';
 
 describe('asyncOperationReducer', () => {
@@ -12,7 +12,7 @@ describe('asyncOperationReducer', () => {
 
   beforeEach(() => {
     state = {};
-    clearRegisteredAsyncDescriptors();
+    clearAsyncOperationsManagerState();
     const dateNowStub = jest.fn(() => 1530518207007);
     global.Date.now = dateNowStub;
   });

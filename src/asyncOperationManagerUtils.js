@@ -10,7 +10,7 @@ import { omit, isArray, isEmpty, reduce } from 'lodash';
 
 import asyncOperationStateUtils from './asyncOperationStateUtils';
 import asyncOperationManagerConfig from './config';
-import { asyncOperationDescriptorRegistry } from './asyncOperationDescriptorRegistry';
+import { asyncOperationManagerState } from './asyncOperationManagerState';
 
 import {
   beginReadAsyncOperation,
@@ -31,12 +31,12 @@ import {
   ASYNC_OPERATION_STEPS,
 } from './constants';
 
-const getRegisteredAsyncDescriptors = asyncOperationDescriptorRegistry.getAsyncOperationDescriptors;
+const getRegisteredAsyncDescriptors = () => asyncOperationManagerState.getState().descriptors;
 
-const clearRegisteredAsyncDescriptors = asyncOperationDescriptorRegistry.clearAsyncOperationDescriptors;
+const clearAsyncOperationsManagerState = asyncOperationManagerState.clearState;
 
 const getAsyncOperationDescriptor = (descriptorId) => {
-  const asyncOperationDescriptors = asyncOperationDescriptorRegistry.getAsyncOperationDescriptors();
+  const asyncOperationDescriptors = getRegisteredAsyncDescriptors();
   return asyncOperationStateUtils.getAsyncOperationDescriptor(asyncOperationDescriptors, descriptorId);
 };
 
@@ -56,7 +56,7 @@ const getAsyncOperationInfo = (descriptorId, params) => {
 
 const registerAsyncOperationDescriptors = (asyncOperationDescriptors, ...otherDescriptors) => {
   let newAsyncOperationDescriptors;
-  const existingAsyncOperationDescriptors = asyncOperationDescriptorRegistry.getAsyncOperationDescriptors();
+  const existingAsyncOperationDescriptors = getRegisteredAsyncDescriptors();
   const config = asyncOperationManagerConfig.getConfig();
 
   if (!isEmpty(otherDescriptors)) {
@@ -73,11 +73,12 @@ const registerAsyncOperationDescriptors = (asyncOperationDescriptors, ...otherDe
     newAsyncOperationDescriptors = asyncOperationStateUtils.updateAsyncOperationDescriptor(existingAsyncOperationDescriptors, asyncOperationDescriptors);
   }
 
-  asyncOperationDescriptorRegistry.setAsyncOperationDescriptors(newAsyncOperationDescriptors);
+  asyncOperationManagerState.setState({
+    descriptors: newAsyncOperationDescriptors,
+  });
   return newAsyncOperationDescriptors;
 };
 
-// TODO: heavy unit testing needed!
 const getAsyncOperation = (state, descriptorId, params, otherFields) => {
   const {
     asyncOperationDescriptor,
@@ -128,7 +129,14 @@ const getStateForOperationAfterStep = (state, asyncOperationStep, descriptorId, 
     otherFields,
   } = getAsyncOperationInfo(descriptorId, params);
 
-  const asyncOperationToTranform = getAsyncOperation(state, descriptorId, asyncOperationParams, otherFields);
+  // set state in case state was initialized from userland
+  if (state) {
+    asyncOperationManagerState.setState(state);    
+  }
+
+  newState = asyncOperationManagerState.getState();
+
+  const asyncOperationToTranform = getAsyncOperation(newState, descriptorId, asyncOperationParams, otherFields);
   const newAsyncOperation = transformTypeLookup[asyncOperationDescriptor.operationType](asyncOperationToTranform, asyncOperationStep, asyncOperationParams, otherFields);
   
   newState = asyncOperationStateUtils.updateAsyncOperation(state, asyncOperationKey, newAsyncOperation, asyncOperationDescriptor);
@@ -137,7 +145,7 @@ const getStateForOperationAfterStep = (state, asyncOperationStep, descriptorId, 
 
 export {
   getRegisteredAsyncDescriptors,
-  clearRegisteredAsyncDescriptors,
+  clearAsyncOperationsManagerState,
   getAsyncOperation,
   registerAsyncOperationDescriptors,
   getAsyncOperationDescriptor,
