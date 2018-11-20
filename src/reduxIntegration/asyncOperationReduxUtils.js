@@ -39,9 +39,37 @@ const createAsyncOperationRejectAction = (descriptorId, action) => {
   };
 };
 
+const getActionForAsyncOperation = (
+  operation,
+  extraParams = {}
+) => {
+  // We're going to pull out all the fields we recognize -- for both Read and Write operations --
+  // and anything left over is assumed to be part of the action (i.e., any necessary IDs or params)
+  const {
+    fetchStatus,
+    dataStatus,
+    message,
+    lastFetchStatusTime,
+    lastDataStatusTime,
+    descriptorId,
+    ...otherProps
+  } = operation;
+
+  if (!descriptorId) {
+    console.warn('AsyncOperation needs to include descriptorId so that we can re-dispatch it.', operation);
+  }
+
+  return {
+    type: descriptorId,
+    ...otherProps,
+    ...extraParams,
+  };
+};
+
 export {
   createAsyncOperationInitialAction,
   createAsyncOperationBeginAction,
   createAsyncOperationResolveAction,
   createAsyncOperationRejectAction,
+  getActionForAsyncOperation,
 };

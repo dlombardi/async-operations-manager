@@ -25,7 +25,12 @@ import {
   initialWriteAsyncOperationForAction,
 } from './asyncOperationUtils';
 
-const updateAsyncOperationDescriptor = (asyncOperationDescriptors, descriptorOptions) => {
+// // //
+// // // These are all pure functions that return new or existing state or
+// // // pieces of new or existing state from their inputs.
+// // //
+
+const updateAsyncOperationDescriptor = (state, descriptorOptions) => {
   const asyncOperationDescriptor = {
     debug: false,
     parentOperationDescriptorId: null,
@@ -38,12 +43,16 @@ const updateAsyncOperationDescriptor = (asyncOperationDescriptors, descriptorOpt
   PropTypes.checkPropTypes(asyncOperationDescriptorPropType, asyncOperationDescriptor, 'prop', 'asyncOperationDescriptor');
   
   return {
-    ...asyncOperationDescriptors,
-    [asyncOperationDescriptor.descriptorId]: asyncOperationDescriptor,
+    ...state,
+    descriptors: {
+      ...state.descriptors,
+      [asyncOperationDescriptor.descriptorId]: asyncOperationDescriptor,
+    },
   };
 };
 
 // validate whether the asyncOperationDescriptor exists
+
 const getAsyncOperationDescriptor = (asyncOperationDescriptors, descriptorId) => {
   const config = asyncOperationManagerConfig.getConfig();
   const asyncOperationDescriptor = asyncOperationDescriptors[descriptorId];
@@ -67,7 +76,9 @@ const getAsyncOperationDescriptor = (asyncOperationDescriptors, descriptorId) =>
 // This function will do all the work to determine if an async operation is returned as an initial async operation
 // (if it is not found in state), an asyncOperation with parentAsyncOperation metaData (recursively searched to find if the parentAsyncOperation is more
 // up-to-date) or just the asyncOperation itself if the none of the above apply.
-const getAsyncOperation = (state, registeredAsyncOperationDescriptors, asyncOperationKey, asyncOperationDescriptor, asyncOperationParams, fieldsToAdd) => {
+const getAsyncOperation = (state, asyncOperationKey, asyncOperationDescriptor, asyncOperationParams, fieldsToAdd) => {
+  const { descriptors: registeredDescriptors, operations } = state;
+
   const config = asyncOperationManagerConfig.getConfig();
   const fieldsToAddToAction = {
     ...asyncOperationParams,
@@ -77,17 +88,17 @@ const getAsyncOperation = (state, registeredAsyncOperationDescriptors, asyncOper
   };
 
   let parentAsyncOperation;
-  let asyncOperation = state[asyncOperationKey] || null;
+  let asyncOperation = operations[asyncOperationKey] || null;
 
   if (asyncOperationDescriptor.parentOperationDescriptorId) {
     // grab key, descriptor, params, and async operation for parentAsyncOperation
-    const parentAsyncOperationDescriptor = getAsyncOperationDescriptor(registeredAsyncOperationDescriptors, asyncOperationDescriptor.parentOperationDescriptorId);
+    const parentAsyncOperationDescriptor = getAsyncOperationDescriptor(registeredDescriptors, asyncOperationDescriptor.parentOperationDescriptorId);
     const parentAsyncOperationParams = getAndValidateParams(asyncOperationParams, parentAsyncOperationDescriptor);
     const parentAsyncOperationKey = generateAsyncOperationKey(
       asyncOperationDescriptor.parentOperationDescriptorId,
       parentAsyncOperationParams,
     );
-    parentAsyncOperation = getAsyncOperation(state, registeredAsyncOperationDescriptors, parentAsyncOperationKey, parentAsyncOperationDescriptor, asyncOperationParams, fieldsToAddToAction);
+    parentAsyncOperation = getAsyncOperation(state, parentAsyncOperationKey, parentAsyncOperationDescriptor, asyncOperationParams, fieldsToAddToAction);
   }
 
   if (asyncOperationDescriptor.debug) {
@@ -130,7 +141,6 @@ const updateAsyncOperation = (state, asyncOperationKey, asyncOperation, asyncOpe
   if (asyncOperationDescriptor.debug) {
     config.logger.verboseLoggingCallback(`Inside updateAsyncOperation for ${asyncOperationKey}`);
     config.logger.infoLoggingCallback('updateAsyncOperation [Data Snapshot]:', {
-      state,
       asyncOperationDescriptor,
       asyncOperation,
       asyncOperationKey,
@@ -140,8 +150,10 @@ const updateAsyncOperation = (state, asyncOperationKey, asyncOperation, asyncOpe
   PropTypes.checkPropTypes(asyncOperationPropType, asyncOperation, 'prop', 'asyncOperation');
 
   return {
-    ...state,
-    [asyncOperationKey]: asyncOperation,
+    operations: {
+      ...state.operations,
+      [asyncOperationKey]: asyncOperation,
+    },
   };
 };
 

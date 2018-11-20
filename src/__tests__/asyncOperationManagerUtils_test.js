@@ -2,16 +2,25 @@
 import { expect } from 'chai';
 
 import {
-  getRegisteredAsyncDescriptors,
+  getAsyncOperationsManagerState,
   registerAsyncOperationDescriptors,
   getAsyncOperationDescriptor,
   getStateForOperationAfterStep,
 } from '../asyncOperationManagerUtils';
 
+import {
+  asyncOperationManagerState,
+} from '../asyncOperationManagerState';
+
+const initialState = {
+  operations: {},
+}
+
 describe('asyncOperationManagerUtils', () => {
   let state;
   beforeEach(() => {
-    state = {};
+    asyncOperationManagerState.clearState();
+    state = initialState;
   });
   describe('registerAsyncOperationDescriptors', () => {
     it('should accept object argument to register one async operation decriptor to state', () => {
@@ -23,7 +32,7 @@ describe('asyncOperationManagerUtils', () => {
         },
       );
 
-      const registeredAsyncDescriptors = getRegisteredAsyncDescriptors(state);
+      const { descriptors: registeredAsyncDescriptors } = getAsyncOperationsManagerState(state);
       expect(Object.keys(registeredAsyncDescriptors)).to.have.lengthOf(1);
       expect(registeredAsyncDescriptors).to.have.all.keys('FETCH_ALL_BEVERAGES_FOR_ORG');
     });
@@ -42,7 +51,7 @@ describe('asyncOperationManagerUtils', () => {
         },
       ]);
 
-      const registeredAsyncDescriptors = getRegisteredAsyncDescriptors(state);
+      const { descriptors: registeredAsyncDescriptors } = getAsyncOperationsManagerState(state);
       expect(Object.keys(registeredAsyncDescriptors)).to.have.lengthOf(2);
       expect(registeredAsyncDescriptors).to.have.all.keys('FETCH_ALL_BEVERAGES_FOR_ORG', 'DRINK_BEVERAGE_BY_ID_FOR_ORG');
     });
@@ -83,21 +92,23 @@ describe('asyncOperationManagerUtils', () => {
           },
         );
 
-        const transformedState = getStateForOperationAfterStep(state, 'BEGIN_ASYNC_OPERATION', 'FETCH_PERSON_DATA', { personId: 111 });
-        expect(transformedState).to.nested.include({ 'FETCH_PERSON_DATA_111.fetchStatus': 'PENDING' });
-        expect(transformedState).to.matchSnapshot('updated state showing begun read async operation');
+        const newOperationsState = getStateForOperationAfterStep(state, 'BEGIN_ASYNC_OPERATION', 'FETCH_PERSON_DATA', { personId: 111 });
+        expect(newOperationsState).to.nested.include({ 'FETCH_PERSON_DATA_111.fetchStatus': 'PENDING' });
+        expect(newOperationsState).to.matchSnapshot('updated state showing begun read async operation');
       });
 
       it('should update state to read show async operation as successful state from pending state', () => {
         state = {
-          FETCH_PERSON_DATA_111: {
-            descriptorId: 'FETCH_PERSON_DATA',
-            fetchStatus: 'PENDING',
-            dataStatus: 'ABSENT',
-            message: null,
-            lastFetchStatusTime: 0,
-            lastDataStatusTime: 0,
-            personId: 111,
+          operations: {
+            FETCH_PERSON_DATA_111: {
+              descriptorId: 'FETCH_PERSON_DATA',
+              fetchStatus: 'PENDING',
+              dataStatus: 'ABSENT',
+              message: null,
+              lastFetchStatusTime: 0,
+              lastDataStatusTime: 0,
+              personId: 111,
+            },
           },
         };
 
@@ -109,21 +120,23 @@ describe('asyncOperationManagerUtils', () => {
           },
         );
 
-        const transformedState = getStateForOperationAfterStep(state, 'RESOLVE_ASYNC_OPERATION', 'FETCH_PERSON_DATA', { personId: 111 });
-        expect(transformedState).to.nested.include({ 'FETCH_PERSON_DATA_111.fetchStatus': 'SUCCESSFUL' });
-        expect(transformedState).to.matchSnapshot('updated state showing successful read async operation');
+        const newOperationsState = getStateForOperationAfterStep(state, 'RESOLVE_ASYNC_OPERATION', 'FETCH_PERSON_DATA', { personId: 111 });
+        expect(newOperationsState).to.nested.include({ 'FETCH_PERSON_DATA_111.fetchStatus': 'SUCCESSFUL' });
+        expect(newOperationsState).to.matchSnapshot('updated state showing successful read async operation');
       });
 
       it('should update state to read show async operation as failed state from pending state', () => {
         state = {
-          FETCH_PERSON_DATA_111: {
-            descriptorId: 'FETCH_PERSON_DATA',
-            fetchStatus: 'PENDING',
-            dataStatus: 'ABSENT',
-            message: null,
-            lastFetchStatusTime: 0,
-            lastDataStatusTime: 0,
-            personId: 111,
+          operations: {
+            FETCH_PERSON_DATA_111: {
+              descriptorId: 'FETCH_PERSON_DATA',
+              fetchStatus: 'PENDING',
+              dataStatus: 'ABSENT',
+              message: null,
+              lastFetchStatusTime: 0,
+              lastDataStatusTime: 0,
+              personId: 111,
+            },
           },
         };
 
@@ -135,9 +148,9 @@ describe('asyncOperationManagerUtils', () => {
           },
         );
 
-        const transformedState = getStateForOperationAfterStep(state, 'REJECT_ASYNC_OPERATION', 'FETCH_PERSON_DATA', { personId: 111 });
-        expect(transformedState).to.nested.include({ 'FETCH_PERSON_DATA_111.fetchStatus': 'FAILED' });
-        expect(transformedState).to.matchSnapshot('updated state showing rejected async operation');
+        const newOperationsState = getStateForOperationAfterStep(state, 'REJECT_ASYNC_OPERATION', 'FETCH_PERSON_DATA', { personId: 111 });
+        expect(newOperationsState).to.nested.include({ 'FETCH_PERSON_DATA_111.fetchStatus': 'FAILED' });
+        expect(newOperationsState).to.matchSnapshot('updated state showing rejected async operation');
       });
     });
 
@@ -151,20 +164,22 @@ describe('asyncOperationManagerUtils', () => {
           },
         );
   
-        const transformedState = getStateForOperationAfterStep(state, 'BEGIN_ASYNC_OPERATION', 'UPDATE_PERSON_DATA', { personId: 111 });
-        expect(transformedState).to.nested.include({ 'UPDATE_PERSON_DATA_111.fetchStatus': 'PENDING' });
-        expect(transformedState).to.matchSnapshot('updated state showing pending write async operation');
+        const newOperationsState = getStateForOperationAfterStep(state, 'BEGIN_ASYNC_OPERATION', 'UPDATE_PERSON_DATA', { personId: 111 });
+        expect(newOperationsState).to.nested.include({ 'UPDATE_PERSON_DATA_111.fetchStatus': 'PENDING' });
+        expect(newOperationsState).to.matchSnapshot('updated state showing pending write async operation');
       });
   
       it('should update state to show write async operation as successful state from pending state', () => {
         state = {
-          UPDATE_PERSON_DATA_111: {
-            descriptorId: 'UPDATE_PERSON_DATA',
-            fetchStatus: 'PENDING',
-            message: null,
-            lastFetchStatusTime: 0,
-            lastDataStatusTime: 0,
-            personId: 111,
+          operations: {
+            UPDATE_PERSON_DATA_111: {
+              descriptorId: 'UPDATE_PERSON_DATA',
+              fetchStatus: 'PENDING',
+              message: null,
+              lastFetchStatusTime: 0,
+              lastDataStatusTime: 0,
+              personId: 111,
+            },
           },
         };
   
@@ -176,20 +191,22 @@ describe('asyncOperationManagerUtils', () => {
           },
         );
   
-        const transformedState = getStateForOperationAfterStep(state, 'RESOLVE_ASYNC_OPERATION', 'UPDATE_PERSON_DATA', { personId: 111 });
-        expect(transformedState).to.nested.include({ 'UPDATE_PERSON_DATA_111.fetchStatus': 'SUCCESSFUL' });
-        expect(transformedState).to.matchSnapshot('updated state showing successful write async operation');
+        const newOperationsState = getStateForOperationAfterStep(state, 'RESOLVE_ASYNC_OPERATION', 'UPDATE_PERSON_DATA', { personId: 111 });
+        expect(newOperationsState).to.nested.include({ 'UPDATE_PERSON_DATA_111.fetchStatus': 'SUCCESSFUL' });
+        expect(newOperationsState).to.matchSnapshot('updated state showing successful write async operation');
       });
 
       it('should update state to show write async operation as failed state from pending state', () => {
         state = {
-          UPDATE_PERSON_DATA_111: {
-            descriptorId: 'UPDATE_PERSON_DATA',
-            fetchStatus: 'PENDING',
-            message: null,
-            lastFetchStatusTime: 0,
-            lastDataStatusTime: 0,
-            personId: 111,
+          operations: {
+            UPDATE_PERSON_DATA_111: {
+              descriptorId: 'UPDATE_PERSON_DATA',
+              fetchStatus: 'PENDING',
+              message: null,
+              lastFetchStatusTime: 0,
+              lastDataStatusTime: 0,
+              personId: 111,
+            },
           },
         };
   
@@ -201,9 +218,9 @@ describe('asyncOperationManagerUtils', () => {
           },
         );
   
-        const transformedState = getStateForOperationAfterStep(state, 'REJECT_ASYNC_OPERATION', 'UPDATE_PERSON_DATA', { personId: 111 });
-        expect(transformedState).to.nested.include({ 'UPDATE_PERSON_DATA_111.fetchStatus': 'FAILED' });
-        expect(transformedState).to.matchSnapshot('updated state showing failed write async operation');
+        const newOperationsState = getStateForOperationAfterStep(state, 'REJECT_ASYNC_OPERATION', 'UPDATE_PERSON_DATA', { personId: 111 });
+        expect(newOperationsState).to.nested.include({ 'UPDATE_PERSON_DATA_111.fetchStatus': 'FAILED' });
+        expect(newOperationsState).to.matchSnapshot('updated state showing failed write async operation');
       });
     });
   });

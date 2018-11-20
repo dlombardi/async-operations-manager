@@ -1,10 +1,13 @@
 import {
-  getRegisteredAsyncDescriptors,
-  clearRegisteredAsyncDescriptors,
+  getAsyncOperationsManagerState,
+  clearAsyncOperationsManagerState,
+  setAsyncOperationsManagerState,
+
   getAsyncOperation,
   registerAsyncOperationDescriptors,
   getAsyncOperationDescriptor,
 } from './asyncOperationManagerUtils';
+
 
 import {
   ASYNC_OPERATION_TYPES,
@@ -27,12 +30,15 @@ export default {
   initializeWithOptions: asyncOperationManagerConfig.setConfig,
   defaultLoggerOptions,
 
-  // API //
-  getRegisteredAsyncDescriptors,
-  clearRegisteredAsyncDescriptors,
+  // State API //
+  getAsyncOperationsManagerState,
+  clearAsyncOperationsManagerState,
+  setAsyncOperationsManagerState,
+
+  // Operation & Decriptor API //
   getAsyncOperation,
-  registerAsyncOperationDescriptors,
   getAsyncOperationDescriptor,
+  registerAsyncOperationDescriptors,
 
   // CONSTANTS //
   ASYNC_OPERATION_TYPES,

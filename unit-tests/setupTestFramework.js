@@ -23,5 +23,5 @@ jasmine.getEnv().addReporter(
     consolidateAll: false,
     savePath: path.join(__dirname, 'junit-xml-output/'),
     filePrefix: 'test-results-',
-  })
+  }),
 );

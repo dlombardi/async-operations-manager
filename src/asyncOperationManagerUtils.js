@@ -6,11 +6,16 @@
 // to the consumer of the library.
 //
 
-import { omit, isArray, isEmpty, reduce } from 'lodash';
+import {
+  omit,
+  isArray,
+  isEmpty,
+  reduce,
+} from 'lodash';
 
 import asyncOperationStateUtils from './asyncOperationStateUtils';
 import asyncOperationManagerConfig from './config';
-import { asyncOperationDescriptorRegistry } from './asyncOperationDescriptorRegistry';
+import { asyncOperationManagerState } from './asyncOperationManagerState';
 
 import {
   beginReadAsyncOperation,
@@ -31,13 +36,13 @@ import {
   ASYNC_OPERATION_STEPS,
 } from './constants';
 
-const getRegisteredAsyncDescriptors = asyncOperationDescriptorRegistry.getAsyncOperationDescriptors;
-
-const clearRegisteredAsyncDescriptors = asyncOperationDescriptorRegistry.clearAsyncOperationDescriptors;
+const getAsyncOperationsManagerState = asyncOperationManagerState.getState;
+const clearAsyncOperationsManagerState = asyncOperationManagerState.clearState;
+const setAsyncOperationsManagerState = asyncOperationManagerState.setState;
 
 const getAsyncOperationDescriptor = (descriptorId) => {
-  const asyncOperationDescriptors = asyncOperationDescriptorRegistry.getAsyncOperationDescriptors();
-  return asyncOperationStateUtils.getAsyncOperationDescriptor(asyncOperationDescriptors, descriptorId);
+  const { descriptors } = getAsyncOperationsManagerState();
+  return asyncOperationStateUtils.getAsyncOperationDescriptor(descriptors, descriptorId);
 };
 
 const getAsyncOperationInfo = (descriptorId, params) => {
@@ -55,8 +60,8 @@ const getAsyncOperationInfo = (descriptorId, params) => {
 };
 
 const registerAsyncOperationDescriptors = (asyncOperationDescriptors, ...otherDescriptors) => {
-  let newAsyncOperationDescriptors;
-  const existingAsyncOperationDescriptors = asyncOperationDescriptorRegistry.getAsyncOperationDescriptors();
+  let newState;
+  const state = getAsyncOperationsManagerState();
   const config = asyncOperationManagerConfig.getConfig();
 
   if (!isEmpty(otherDescriptors)) {
@@ -66,18 +71,16 @@ const registerAsyncOperationDescriptors = (asyncOperationDescriptors, ...otherDe
   }
   // handle array or single object arguments
   if (isArray(asyncOperationDescriptors)) {
-    newAsyncOperationDescriptors = reduce(asyncOperationDescriptors, (acc, asyncOperationDescriptor) => {
+    newState = reduce(asyncOperationDescriptors, (acc, asyncOperationDescriptor) => {
       return asyncOperationStateUtils.updateAsyncOperationDescriptor(acc, asyncOperationDescriptor);
-    }, existingAsyncOperationDescriptors);
+    }, state);
   } else {
-    newAsyncOperationDescriptors = asyncOperationStateUtils.updateAsyncOperationDescriptor(existingAsyncOperationDescriptors, asyncOperationDescriptors);
+    newState = asyncOperationStateUtils.updateAsyncOperationDescriptor(state, asyncOperationDescriptors);
   }
 
-  asyncOperationDescriptorRegistry.setAsyncOperationDescriptors(newAsyncOperationDescriptors);
-  return newAsyncOperationDescriptors;
+  return asyncOperationManagerState.setState(newState);
 };
 
-// TODO: heavy unit testing needed!
 const getAsyncOperation = (state, descriptorId, params, otherFields) => {
   const {
     asyncOperationDescriptor,
@@ -85,9 +88,7 @@ const getAsyncOperation = (state, descriptorId, params, otherFields) => {
     asyncOperationKey,
   } = getAsyncOperationInfo(descriptorId, params);
 
-  const registeredAsyncOperationDescriptors = getRegisteredAsyncDescriptors();
-
-  return asyncOperationStateUtils.getAsyncOperation(state, registeredAsyncOperationDescriptors, asyncOperationKey, asyncOperationDescriptor, asyncOperationParams, otherFields);
+  return asyncOperationStateUtils.getAsyncOperation(state, asyncOperationKey, asyncOperationDescriptor, asyncOperationParams, otherFields);
 };
 
 // switchboard for resolving the Read operation steps
@@ -120,7 +121,7 @@ const transformTypeLookup = {
 
 // this function is called in the reducer (in redux integration)
 const getStateForOperationAfterStep = (state, asyncOperationStep, descriptorId, params) => {
-  let newState = state;
+  let newState;
   const {
     asyncOperationDescriptor,
     asyncOperationParams,
@@ -128,16 +129,23 @@ const getStateForOperationAfterStep = (state, asyncOperationStep, descriptorId, 
     otherFields,
   } = getAsyncOperationInfo(descriptorId, params);
 
-  const asyncOperationToTranform = getAsyncOperation(state, descriptorId, asyncOperationParams, otherFields);
+  // in case operation/descriptor state is initialized in userland we pass that through
+  // to the library state.
+  newState = asyncOperationManagerState.setState(state);
+
+
+  const asyncOperationToTranform = getAsyncOperation(newState, descriptorId, asyncOperationParams, otherFields);
   const newAsyncOperation = transformTypeLookup[asyncOperationDescriptor.operationType](asyncOperationToTranform, asyncOperationStep, asyncOperationParams, otherFields);
-  
-  newState = asyncOperationStateUtils.updateAsyncOperation(state, asyncOperationKey, newAsyncOperation, asyncOperationDescriptor);
-  return newState;
+
+  newState = asyncOperationStateUtils.updateAsyncOperation(newState, asyncOperationKey, newAsyncOperation, asyncOperationDescriptor);
+  return asyncOperationManagerState.setState(newState).operations;
 };
 
 export {
-  getRegisteredAsyncDescriptors,
-  clearRegisteredAsyncDescriptors,
+  getAsyncOperationsManagerState,
+  clearAsyncOperationsManagerState,
+  setAsyncOperationsManagerState,
+
   getAsyncOperation,
   registerAsyncOperationDescriptors,
   getAsyncOperationDescriptor,
