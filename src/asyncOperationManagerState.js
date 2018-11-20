@@ -11,10 +11,10 @@ const asyncOperationManagerState = (() => {
   let state;
 
   const getState = () => {
-    if (!asyncOperationManagerState) {
+    if (!state) {
       state = initialAsyncOperationManagerState;
     }
-    return asyncOperationManagerState;
+    return state;
   };
 
   const setState = (newState = {}) => {
@@ -22,15 +22,15 @@ const asyncOperationManagerState = (() => {
     const newOperations = get(newState, 'operations', {});
     state = {
       descriptors: {
-        ...asyncOperationManagerState.descriptors,
+        ...state.descriptors,
         ...newDescriptors,
       },
       operations: {
-        ...asyncOperationManagerState.operations,
+        ...state.operations,
         ...newOperations,
       },
     };
-    return asyncOperationManagerState;
+    return state;
   };
 
   const clearState = () => {

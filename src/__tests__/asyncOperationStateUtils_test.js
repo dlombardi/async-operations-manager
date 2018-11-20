@@ -3,18 +3,20 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 import asyncOperationStateUtils from '../asyncOperationStateUtils';
+import { asyncOperationManagerState } from '../asyncOperationManagerState';
 
 const initialState = {
   descriptors: {},
   operations: {},
 };
 
-describe.only('asyncOperationStateUtils', () => {
+describe('asyncOperationStateUtils', () => {
   describe('updateAsyncOperationDescriptor', () => {
     let stub;
     let state;
 
     beforeEach(() => {
+      asyncOperationManagerState.clearState();
       state = initialState;
       stub = sinon.stub(console, 'error');
     });
@@ -75,6 +77,7 @@ describe.only('asyncOperationStateUtils', () => {
   describe('updateAsyncOperation', () => {
     let state;
     beforeEach(() => {
+      asyncOperationManagerState.clearState();
       state = initialState;
     });
 
@@ -103,6 +106,7 @@ describe.only('asyncOperationStateUtils', () => {
   describe('bulkUpdateAsyncOperations', () => {
     let state;
     beforeEach(() => {
+      asyncOperationManagerState.clearState();
       state = initialState;
     });
 
@@ -154,6 +158,7 @@ describe.only('asyncOperationStateUtils', () => {
     let state;
     beforeEach(() => {
       state = initialState;
+      asyncOperationManagerState.clearState();
     });
 
     it('should return an initial read asyncOperation', () => {
@@ -161,7 +166,6 @@ describe.only('asyncOperationStateUtils', () => {
         descriptorId: 'FETCH_PERSON_DATA',
         requiredParams: ['personId'],
         operationType: 'READ',
-        descriptorId: 'FETCH_PERSON_DATA',
       };
 
       const asyncOperation = asyncOperationStateUtils.getAsyncOperation(state, 'FETCH_PERSON_DATA_111', asyncOperationDescriptor, { personId: 111 });
@@ -180,7 +184,6 @@ describe.only('asyncOperationStateUtils', () => {
         descriptorId: 'UPDATE_PERSON_DATA',
         requiredParams: ['personId'],
         operationType: 'WRITE',
-        descriptorId: 'UPDATE_PERSON_DATA',
       };
 
       const asyncOperation = asyncOperationStateUtils.getAsyncOperation(state, 'UPDATE_PERSON_DATA_111', asyncOperationDescriptor, { personId: 111 });
@@ -203,14 +206,13 @@ describe.only('asyncOperationStateUtils', () => {
             lastDataStatusTime: '2018-10-01T19:12:13.189Z',
             personId: 111,
           },
-        }
+        },
       };
 
       const asyncOperationDescriptor = {
         descriptorId: 'FETCH_PERSON_DATA',
         requiredParams: ['personId'],
         operationType: 'READ',
-        descriptorId: 'FETCH_PERSON_DATA',
       };
 
       const asyncOperation = asyncOperationStateUtils.getAsyncOperation(state, 'FETCH_PERSON_DATA_111', asyncOperationDescriptor, { personId: 111 });
@@ -230,14 +232,13 @@ describe.only('asyncOperationStateUtils', () => {
             lastDataStatusTime: '2018-10-01T19:12:53.189Z',
             personId: 111,
           },
-        }
+        },
       };
 
       const asyncOperationDescriptor = {
         descriptorId: 'FETCH_PERSON_DATA',
         requiredParams: ['personId'],
         operationType: 'READ',
-        descriptorId: 'FETCH_PERSON_DATA',
       };
 
       const asyncOperation = asyncOperationStateUtils.getAsyncOperation(state, 'FETCH_PERSON_DATA_111', asyncOperationDescriptor, { personId: 111 });
@@ -270,16 +271,14 @@ describe.only('asyncOperationStateUtils', () => {
           FETCH_ALL_PERSON_DATA: {
             descriptorId: 'FETCH_ALL_PERSON_DATA',
             operationType: 'READ',
-            descriptorId: 'FETCH_ALL_PERSON_DATA',
           },
-        }
+        },
       };
 
       const fetchPersonDataAsyncOperationDescriptor = {
         descriptorId: 'FETCH_PERSON_DATA',
         requiredParams: ['personId'],
         operationType: 'READ',
-        descriptorId: 'FETCH_PERSON_DATA',
         // optional values
         parentOperationDescriptorId: 'FETCH_ALL_PERSON_DATA',
       };
@@ -328,23 +327,20 @@ describe.only('asyncOperationStateUtils', () => {
             descriptorId: 'FETCH_ALL_PERSON_DATA_FOR_ORG',
             requiredParams: ['orgId'],
             operationType: 'READ',
-            descriptorId: 'FETCH_ALL_PERSON_DATA_FOR_ORG',
             parentOperationDescriptorId: 'FETCH_ALL_DATA_FOR_ORG',
           },
           FETCH_ALL_DATA_FOR_ORG: {
             descriptorId: 'FETCH_ALL_DATA_FOR_ORG',
             requiredParams: ['orgId'],
             operationType: 'READ',
-            descriptorId: 'FETCH_ALL_DATA_FOR_ORG',
           },
-        }
+        },
       };
 
 
       const fetchPersonDataAsyncOperationDescriptor = {
         descriptorId: 'FETCH_PERSON_DATA',
         requiredParams: ['orgId', 'personId'],
-        descriptorId: 'FETCH_PERSON_DATA',
         operationType: 'READ',
         parentOperationDescriptorId: 'FETCH_ALL_PERSON_DATA_FOR_ORG',
       };

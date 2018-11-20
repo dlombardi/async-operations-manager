@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "A library to generate and represent stateful metaData of an async request and as an 'operation'.   ",
   "scripts": {
-    "babel-transpile": "npx babel src --out-dir lib",
-    "unit-tests": "npm run babel-transpile && npx jest lib",
-    "ci-tests": "npm run babel-transpile && npx jest -u lib",
+    "test": "npx jest",
+    "ci-tests": "npx jest -u",
+    "build": "babel src --out-dir ./dist --source-maps",
     "coverage": "nyc mocha --require @babel/register src/",
-    "lint": "eslint .",
-    "sendCoverage": "nyc report --reporter=text-lcov | coveralls"
+    "sendCoverage": "nyc report --reporter=text-lcov | coveralls",
+    "lint": "eslint ."
   },
   "author": "Darien Lombardi https://github.com/dlombardi",
   "license": "MIT",

@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 
 import {
-  getRegisteredAsyncDescriptors,
+  getAsyncOperationsManagerState,
   registerAsyncOperationDescriptors,
   getAsyncOperationDescriptor,
   getStateForOperationAfterStep,
@@ -32,7 +32,7 @@ describe('asyncOperationManagerUtils', () => {
         },
       );
 
-      const registeredAsyncDescriptors = getRegisteredAsyncDescriptors(state);
+      const { descriptors: registeredAsyncDescriptors } = getAsyncOperationsManagerState(state);
       expect(Object.keys(registeredAsyncDescriptors)).to.have.lengthOf(1);
       expect(registeredAsyncDescriptors).to.have.all.keys('FETCH_ALL_BEVERAGES_FOR_ORG');
     });
@@ -51,7 +51,7 @@ describe('asyncOperationManagerUtils', () => {
         },
       ]);
 
-      const registeredAsyncDescriptors = getRegisteredAsyncDescriptors(state);
+      const { descriptors: registeredAsyncDescriptors } = getAsyncOperationsManagerState(state);
       expect(Object.keys(registeredAsyncDescriptors)).to.have.lengthOf(2);
       expect(registeredAsyncDescriptors).to.have.all.keys('FETCH_ALL_BEVERAGES_FOR_ORG', 'DRINK_BEVERAGE_BY_ID_FOR_ORG');
     });
@@ -109,7 +109,7 @@ describe('asyncOperationManagerUtils', () => {
               lastDataStatusTime: 0,
               personId: 111,
             },
-          }
+          },
         };
 
         registerAsyncOperationDescriptors(
@@ -137,7 +137,7 @@ describe('asyncOperationManagerUtils', () => {
               lastDataStatusTime: 0,
               personId: 111,
             },
-          }
+          },
         };
 
         registerAsyncOperationDescriptors(
@@ -180,7 +180,7 @@ describe('asyncOperationManagerUtils', () => {
               lastDataStatusTime: 0,
               personId: 111,
             },
-          }
+          },
         };
   
         registerAsyncOperationDescriptors(
@@ -207,7 +207,7 @@ describe('asyncOperationManagerUtils', () => {
               lastDataStatusTime: 0,
               personId: 111,
             },
-          }
+          },
         };
   
         registerAsyncOperationDescriptors(

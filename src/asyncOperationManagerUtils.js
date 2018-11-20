@@ -36,15 +36,13 @@ import {
   ASYNC_OPERATION_STEPS,
 } from './constants';
 
-const getRegisteredAsyncDescriptors = () => asyncOperationManagerState.getState().descriptors;
-
+const getAsyncOperationsManagerState = asyncOperationManagerState.getState;
 const clearAsyncOperationsManagerState = asyncOperationManagerState.clearState;
-
 const setAsyncOperationsManagerState = asyncOperationManagerState.setState;
 
 const getAsyncOperationDescriptor = (descriptorId) => {
-  const asyncOperationDescriptors = getRegisteredAsyncDescriptors();
-  return asyncOperationStateUtils.getAsyncOperationDescriptor(asyncOperationDescriptors, descriptorId);
+  const { descriptors } = getAsyncOperationsManagerState();
+  return asyncOperationStateUtils.getAsyncOperationDescriptor(descriptors, descriptorId);
 };
 
 const getAsyncOperationInfo = (descriptorId, params) => {
@@ -63,7 +61,7 @@ const getAsyncOperationInfo = (descriptorId, params) => {
 
 const registerAsyncOperationDescriptors = (asyncOperationDescriptors, ...otherDescriptors) => {
   let newState;
-  const existingAsyncOperationDescriptors = getRegisteredAsyncDescriptors();
+  const state = getAsyncOperationsManagerState();
   const config = asyncOperationManagerConfig.getConfig();
 
   if (!isEmpty(otherDescriptors)) {
@@ -75,9 +73,9 @@ const registerAsyncOperationDescriptors = (asyncOperationDescriptors, ...otherDe
   if (isArray(asyncOperationDescriptors)) {
     newState = reduce(asyncOperationDescriptors, (acc, asyncOperationDescriptor) => {
       return asyncOperationStateUtils.updateAsyncOperationDescriptor(acc, asyncOperationDescriptor);
-    }, existingAsyncOperationDescriptors);
+    }, state);
   } else {
-    newState = asyncOperationStateUtils.updateAsyncOperationDescriptor(existingAsyncOperationDescriptors, asyncOperationDescriptors);
+    newState = asyncOperationStateUtils.updateAsyncOperationDescriptor(state, asyncOperationDescriptors);
   }
 
   return asyncOperationManagerState.setState(newState);
@@ -143,7 +141,7 @@ const getStateForOperationAfterStep = (state, asyncOperationStep, descriptorId, 
 };
 
 export {
-  getRegisteredAsyncDescriptors,
+  getAsyncOperationsManagerState,
   clearAsyncOperationsManagerState,
   setAsyncOperationsManagerState,
 
