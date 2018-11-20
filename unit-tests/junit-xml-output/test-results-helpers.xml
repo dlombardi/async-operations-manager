@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites disabled="0" errors="0" failures="0" tests="10" time="0.01">
- <testsuite name="helpers" timestamp="2018-11-19T19:43:22" hostname="localhost" time="0.005" errors="0" tests="0" skipped="0" disabled="0" failures="0">
+ <testsuite name="helpers" timestamp="2018-11-19T21:18:44" hostname="localhost" time="0.005" errors="0" tests="0" skipped="0" disabled="0" failures="0">
  </testsuite>
- <testsuite name="helpers.generateAsyncOperationKey" timestamp="2018-11-19T19:43:22" hostname="localhost" time="0.002" errors="0" tests="5" skipped="0" disabled="0" failures="0">
+ <testsuite name="helpers.generateAsyncOperationKey" timestamp="2018-11-19T21:18:44" hostname="localhost" time="0.002" errors="0" tests="5" skipped="0" disabled="0" failures="0">
   <testcase classname="helpers.generateAsyncOperationKey" name="should create an asyncOperation key with no params" time="0.001" />
   <testcase classname="helpers.generateAsyncOperationKey" name="should create an asyncOperation key with one param" time="0" />
-  <testcase classname="helpers.generateAsyncOperationKey" name="should create an asyncOperation key with multiple params" time="0" />
-  <testcase classname="helpers.generateAsyncOperationKey" name="should throw an exception if a label is not provided" time="0.001" />
+  <testcase classname="helpers.generateAsyncOperationKey" name="should create an asyncOperation key with multiple params" time="0.001" />
+  <testcase classname="helpers.generateAsyncOperationKey" name="should throw an exception if a label is not provided" time="0" />
   <testcase classname="helpers.generateAsyncOperationKey" name="should throw an exception if a label is not a string" time="0" />
  </testsuite>
- <testsuite name="helpers.getAndValidateParams" timestamp="2018-11-19T19:43:22" hostname="localhost" time="0.002" errors="0" tests="3" skipped="0" disabled="0" failures="0">
+ <testsuite name="helpers.getAndValidateParams" timestamp="2018-11-19T21:18:44" hostname="localhost" time="0.002" errors="0" tests="3" skipped="0" disabled="0" failures="0">
   <testcase classname="helpers.getAndValidateParams" name="should validate and successfully return correct asyncOperation params" time="0.001" />
   <testcase classname="helpers.getAndValidateParams" name="should validate and fail on an undefined param" time="0.001" />
   <testcase classname="helpers.getAndValidateParams" name="should validate and fail on a missing param" time="0" />
  </testsuite>
- <testsuite name="helpers.makeConstantsObject" timestamp="2018-11-19T19:43:22" hostname="localhost" time="0.001" errors="0" tests="2" skipped="0" disabled="0" failures="0">
+ <testsuite name="helpers.makeConstantsObject" timestamp="2018-11-19T21:18:44" hostname="localhost" time="0.001" errors="0" tests="2" skipped="0" disabled="0" failures="0">
   <testcase classname="helpers.makeConstantsObject" name="should make a constants object out of an array of string values" time="0.001" />
   <testcase classname="helpers.makeConstantsObject" name="should make a constants object that is immutable" time="0" />
  </testsuite>

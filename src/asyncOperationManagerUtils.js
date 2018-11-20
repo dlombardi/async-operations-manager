@@ -133,9 +133,10 @@ const getStateForOperationAfterStep = (state, asyncOperationStep, descriptorId, 
   // to the library state.
   newState = asyncOperationManagerState.setState(state);
 
+
   const asyncOperationToTranform = getAsyncOperation(newState, descriptorId, asyncOperationParams, otherFields);
   const newAsyncOperation = transformTypeLookup[asyncOperationDescriptor.operationType](asyncOperationToTranform, asyncOperationStep, asyncOperationParams, otherFields);
-  
+
   newState = asyncOperationStateUtils.updateAsyncOperation(newState, asyncOperationKey, newAsyncOperation, asyncOperationDescriptor);
   return asyncOperationManagerState.setState(newState).operations;
 };
