@@ -2,7 +2,8 @@
 lib/
 node_modules/
 unit-tests/
-unit-tests/junit-xml-output/
+!unit-tests/setupTestFramework
+
 
 *~
 .DS_Store
