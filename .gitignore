@@ -1,7 +1,7 @@
 
-/lib/
-/node_modules/
-/unit-tests/.jest-cache
+lib/
+node_modules/
+unit-tests/
 
 *~
 .DS_Store
