@@ -1,5 +1,5 @@
 {
-  "name": "asyncoperationsmanager",
+  "name": "async-operations-manager",
   "version": "1.0.0",
   "description": "A library to generate and represent stateful metaData of an async request and as an 'operation'.   ",
   "scripts": {
