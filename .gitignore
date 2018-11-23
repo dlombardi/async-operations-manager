@@ -2,6 +2,7 @@
 lib/
 node_modules/
 unit-tests/
+unit-tests/junit-xml-output/
 
 *~
 .DS_Store
