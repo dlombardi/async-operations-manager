@@ -88,7 +88,11 @@ const getAsyncOperation = (state, descriptorId, params, otherFields) => {
     asyncOperationKey,
   } = getAsyncOperationInfo(descriptorId, params);
 
-  return asyncOperationStateUtils.getAsyncOperation(state, asyncOperationKey, asyncOperationDescriptor, asyncOperationParams, otherFields);
+  // in case operation/descriptor state is initialized in userland we pass that through
+  // to the library state.
+  const newState = asyncOperationManagerState.setState(state);
+
+  return asyncOperationStateUtils.getAsyncOperation(newState, asyncOperationKey, asyncOperationDescriptor, asyncOperationParams, otherFields);
 };
 
 // switchboard for resolving the Read operation steps
