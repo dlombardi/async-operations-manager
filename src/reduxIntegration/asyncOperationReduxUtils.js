@@ -39,9 +39,11 @@ const createAsyncOperationRejectAction = (descriptorId, action) => {
   };
 };
 
+const createAsyncOperationResolveType = descriptorId => `AOM//RESOLVE__${descriptorId}`;
+
 const getActionForAsyncOperation = (
   operation,
-  extraParams = {}
+  extraParams = {},
 ) => {
   // We're going to pull out all the fields we recognize -- for both Read and Write operations --
   // and anything left over is assumed to be part of the action (i.e., any necessary IDs or params)
@@ -71,5 +73,6 @@ export {
   createAsyncOperationBeginAction,
   createAsyncOperationResolveAction,
   createAsyncOperationRejectAction,
+  createAsyncOperationResolveType,
   getActionForAsyncOperation,
 };

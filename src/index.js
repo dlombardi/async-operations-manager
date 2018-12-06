@@ -6,11 +6,17 @@ import {
   getAsyncOperation,
   registerAsyncOperationDescriptors,
   getAsyncOperationDescriptor,
+  getStateForOperationAfterStep,
+  
+  shouldRunOperation,
 } from './asyncOperationManagerUtils';
 
 
 import {
   ASYNC_OPERATION_TYPES,
+  ASYNC_OPERATION_STEPS,
+  FETCH_STATUS,
+  DATA_STATUS,
 } from './constants';
 
 import {
@@ -38,8 +44,13 @@ export default {
   // Operation & Decriptor API //
   getAsyncOperation,
   getAsyncOperationDescriptor,
+  getStateForOperationAfterStep,
   registerAsyncOperationDescriptors,
+  shouldRunOperation,
 
   // CONSTANTS //
   ASYNC_OPERATION_TYPES,
+  ASYNC_OPERATION_STEPS,
+  FETCH_STATUS,
+  DATA_STATUS,
 };

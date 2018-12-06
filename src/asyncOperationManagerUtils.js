@@ -34,6 +34,7 @@ import {
 import {
   ASYNC_OPERATION_TYPES,
   ASYNC_OPERATION_STEPS,
+  FETCH_STATUS,
 } from './constants';
 
 const getAsyncOperationsManagerState = asyncOperationManagerState.getState;
@@ -95,6 +96,22 @@ const getAsyncOperation = (state, descriptorId, params, otherFields) => {
   return asyncOperationStateUtils.getAsyncOperation(newState, asyncOperationKey, asyncOperationDescriptor, asyncOperationParams, otherFields);
 };
 
+const shouldRunOperation = (descriptorId, params) => {
+  const {
+    asyncOperationDescriptor,
+    asyncOperationParams,
+  } = getAsyncOperationInfo(descriptorId, params);
+
+  const state = asyncOperationManagerState.getState();
+  const asyncOperation = getAsyncOperation(state, descriptorId, asyncOperationParams);
+
+  if (asyncOperationDescriptor.operationType === ASYNC_OPERATION_TYPES.READ && asyncOperation.fetchStatus !== FETCH_STATUS.NULL) {
+    return (Date.now() - asyncOperation.lastFetchStatusTime) >= asyncOperationDescriptor.minCacheTime;
+  }
+
+  return true;
+};
+
 // switchboard for resolving the Read operation steps
 const readStepLookup = {
   [ASYNC_OPERATION_STEPS.BEGIN_ASYNC_OPERATION]:
@@ -137,7 +154,6 @@ const getStateForOperationAfterStep = (state, asyncOperationStep, descriptorId, 
   // to the library state.
   newState = asyncOperationManagerState.setState(state);
 
-
   const asyncOperationToTranform = getAsyncOperation(newState, descriptorId, asyncOperationParams, otherFields);
   const newAsyncOperation = transformTypeLookup[asyncOperationDescriptor.operationType](asyncOperationToTranform, asyncOperationStep, asyncOperationParams, otherFields);
 
@@ -155,4 +171,6 @@ export {
   getAsyncOperationDescriptor,
   getStateForOperationAfterStep,
   getAsyncOperationInfo,
+
+  shouldRunOperation,
 };
