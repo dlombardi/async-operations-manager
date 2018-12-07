@@ -39,7 +39,7 @@ const createAsyncOperationRejectAction = (descriptorId, action) => {
   };
 };
 
-const createAsyncOperationResolveType = descriptorId => `AOM//RESOLVE__${descriptorId}`;
+const getAsyncOperationResolveActionType = descriptorId => `AOM//RESOLVE__${descriptorId}`;
 
 const getActionForAsyncOperation = (
   operation,
@@ -73,6 +73,6 @@ export {
   createAsyncOperationBeginAction,
   createAsyncOperationResolveAction,
   createAsyncOperationRejectAction,
-  createAsyncOperationResolveType,
+  getAsyncOperationResolveActionType,
   getActionForAsyncOperation,
 };
