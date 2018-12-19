@@ -8,8 +8,14 @@ If you want to use it anyway, you can import it by specifying the desired commit
 
 A distributed package is currently planned for after the API has stabilized and test coverage is satisfactory.
 
+## Integration Guides
+| Name | README |
+| ---- | ---- |
+| Redux | `src/reduxIntegration/README.md` |
+
 ## Mission Statement:
-`async-operations-manager` seeks to minimize the boilerplate to handle and maximize the exposure of stateful information of async requests in a state-driven application.
+`async-operations-manager` seeks to minimize the overhead of generating stateful data of an async request while also providing a system to improve data-fetching performance through async operation parent-child relationships and caching.
+
 
 ## What is an Async Operation?
 
@@ -43,6 +49,76 @@ const writeAsyncOperation = {
 
 This metaData can be used to better optimize async requests to a server (`lastFetchStatusTime`, `lastDataStatusTime`, `lastFetchFailed`) and also provides an api to hook into when determining what visual feedback to present the user as the async request makes its journey (`dataStatus` and `fetchStatus`).
 
+## How to use Async Operations:
+
+Everytime an async request completes a new stage of its journey we want to update the operation to reflect it's new state.
+### Async request journey:
+1. Identify an async request is going to happen (a request to fetch all users)
+```javascript
+const fetchAllEmployeesByStoreId = (storeId) => {
+    // returns a promise
+    return api.fetchAllEmployeesByStoreId(storeId);
+};
+```
+2. Register an async operation descriptor for that async operation
+```javascript
+import asyncOperationManager from 'async-operations-manager';
+asyncOperationManager.registerAsyncOperationDescriptors(
+  {
+    descriptorId: 'FETCH_ALL_EMPLOYEES_BY_STORE_ID',
+    requiredParams: ['storeId'],
+    operationType: asyncOperationManager.ASYNC_OPERATION_TYPES.READ,
+  },
+);
+
+const fetchAllEmployeesByStoreId = (storeId) => {
+    // returns a promise
+    return api.fetchAllEmployeesByStoreId(storeId);
+};
+```
+3. `Begin` an async operation when you begin an async request (`getStateForOperationAfterStep`)
+```javascript
+import asyncOperationManager from 'async-operations-manager';
+asyncOperationManager.registerAsyncOperationDescriptors(
+  {
+    descriptorId: 'FETCH_ALL_EMPLOYEES_BY_STORE_ID',
+    requiredParams: ['storeId'],
+    operationType: asyncOperationManager.ASYNC_OPERATION_TYPES.READ,
+  },
+);
+
+const fetchAllEmployeesByStoreId = (storeId) => {
+    // transforms async operation to a begun state
+    getStateForOperationAfterStep({}, asyncOperationManager.ASYNC_OPERATION_STEPS.BEGIN_ASYNC_OPERATION, 'FETCH_ALL_EMPLOYEES_BY_STORE_ID', { storeId: 2 })
+    // returns a promise
+    return api.fetchAllEmployeesByStoreId(storeId)
+};
+```
+4. `Resolve` or `Reject` an async operation after an async response (server response?) is received (`getStateForOperationAfterStep`)
+```javascript
+import asyncOperationManager from 'async-operations-manager';
+asyncOperationManager.registerAsyncOperationDescriptors(
+  {
+    descriptorId: 'FETCH_ALL_EMPLOYEES_BY_STORE_ID',
+    requiredParams: ['storeId'],
+    operationType: asyncOperationManager.ASYNC_OPERATION_TYPES.READ,
+  },
+);
+
+const fetchAllEmployeesByStoreId = (storeId) => {
+    // transforms async operation to a begun state
+    getStateForOperationAfterStep({}, asyncOperationManager.ASYNC_OPERATION_STEPS.BEGIN_ASYNC_OPERATION, 'FETCH_ALL_EMPLOYEES_BY_STORE_ID', { storeId: 2 })
+    return api.fetchAllEmployeesByStoreId(storeId).then(response => {
+            // transforms async operation to a resolved state
+            getStateForOperationAfterStep({}, asyncOperationManager.ASYNC_OPERATION_STEPS.RESOLVE_ASYNC_OPERATION, 'FETCH_ALL_EMPLOYEES_BY_STORE_ID', { storeId: 2 })
+            return response;
+    }).catch(err => {
+        // transforms async operation to a rejected state
+        getStateForOperationAfterStep({}, asyncOperationManager.ASYNC_OPERATION_STEPS.REJECT_ASYNC_OPERATION, 'FETCH_ALL_EMPLOYEES_BY_STORE_ID', { storeId: 2 })
+        return err
+    ));
+};
+```
 
 ## Core APIs
 ---
@@ -68,15 +144,4 @@ This metaData can be used to better optimize async requests to a server (`lastFe
 | shouldRunOperation | Function | Return a bool if *fetch* Operation should be run according to the corresponding Operation's Descriptor's caching options | (descriptorId: String, params: Object)
 
 
-## Integrations
----
-### Redux Integration API
-| Name | Type |Description | Args |
-| ------ | ------ | ------ | ------ |
-| createAsyncOperationInitialAction | Function | Action Creator for an initial action with necessary properties to be used to kick-off an async operation when dispatched | (descriptorId: String, action: Object)
-| createAsyncOperationBeginAction | Function | Action Creator for a `BEGIN` action for an async operation | (descriptorId: String, action: Object)
-| createAsyncOperationResolveAction | Function | Action Creator for a `RESOLVE` action for an async operation | (descriptorId: String, action: Object)
-| createAsyncOperationRejectAction | Function | Action Creator for a `REJECT` action for an async operation | (descriptorId: String, action: Object)
-| getAsyncOperationResolveActionType | Function | Return the action type for an action that resolves an async operation for use in a reducer | (descriptorId: String)
-| asyncOperationReducer | Function | The async operation reducer  | (state: Object, action: Object)
 
