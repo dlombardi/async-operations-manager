@@ -25,13 +25,11 @@ import {
 
 import asyncOperationManagerConfig from './config';
 
-import reduxIntegration from './reduxIntegration';
+// export integration as named exports
+export reduxIntegration from './reduxIntegration';
 
 // This is the library as exposed to the consumer
 export default {
-  // INTEGRATIONS //
-  reduxIntegration,
-
   // CONFIG //
   initializeWithOptions: asyncOperationManagerConfig.setConfig,
   defaultLoggerOptions,
