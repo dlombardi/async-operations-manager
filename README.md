@@ -146,5 +146,5 @@ const fetchAllEmployeesByStoreId = (storeId) => {
 ### Integration APIs
 | Name | README |
 | ---- | ---- |
-| Redux | `src/reduxIntegration/README.md` |
+| reduxIntegration | `src/reduxIntegration/README.md` |
 

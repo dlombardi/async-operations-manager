@@ -1,5 +1,6 @@
 ## Getting Started
 1. Setup reducer
+
 ```javascript
 // rootReducer.js
 
@@ -10,19 +11,13 @@ const rootReducer = combineReducers({
   // ... other reducers
 });
 ```
+
 2. Register descriptors and create actions
-```javacript
+
+```javascript
 // employeeActions.js
 
-import asyncOperationManager from 'async-operations-manager';
-
-const {
-  reduxIntegration: {
-      createAsyncOperationBeginAction,
-      createAsyncOperationResolveAction,
-      createAsyncOperationRejectAction,
-  },
-} = asyncOperationManager;
+import asyncOperationManager, { reduxIntegration } from 'async-operations-manager';
 
 export const FETCH_ALL_EMPLOYEES_BY_STORE_ID = 'FETCH_ALL_EMPLOYEES_BY_STORE_ID'
 
@@ -55,6 +50,7 @@ export function fetchAllEmployeesForStoreIdRejectAction(storeId) {
   });
 }
 ```
+
 #### Async request journey:
 1. Identify an async request is going to happen (a request to fetch all users)
 ```javascript
