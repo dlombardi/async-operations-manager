@@ -70,7 +70,6 @@ asyncOperationManager.registerAsyncOperationDescriptors(
     operationType: asyncOperationManager.ASYNC_OPERATION_TYPES.READ,
   },
 );
-
 const fetchAllEmployeesByStoreId = (storeId) => {
     // returns a promise
     return api.fetchAllEmployeesByStoreId(storeId);
@@ -120,7 +119,7 @@ const fetchAllEmployeesByStoreId = (storeId) => {
 };
 ```
 
-## Core APIs
+## Async Operations Manager API
 ---
 ### Config API
 | Name | Type |Description | Args |
@@ -144,4 +143,8 @@ const fetchAllEmployeesByStoreId = (storeId) => {
 | shouldRunOperation | Function | Return a bool if *fetch* Operation should be run according to the corresponding Operation's Descriptor's caching options | (descriptorId: String, params: Object)
 
 
+### Integration APIs
+| Name | README |
+| ---- | ---- |
+| reduxIntegration | `src/reduxIntegration/README.md` |
 
