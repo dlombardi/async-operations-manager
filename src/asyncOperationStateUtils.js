@@ -1,6 +1,6 @@
 
 // TODO: JSDocify every function
-import { pick, reduce } from 'lodash';
+import { pick, forEach, reduce } from 'lodash';
 import PropTypes from 'prop-types';
 
 import asyncOperationManagerConfig from './config';
@@ -11,8 +11,7 @@ import {
 } from './constants';
 
 import {
-  generateAsyncOperationKey,
-  getAndValidateParams,
+  getAsyncOperationInfo,
 } from './helpers';
 
 import {
@@ -34,9 +33,11 @@ const updateAsyncOperationDescriptor = (state, descriptorOptions) => {
   const asyncOperationDescriptor = {
     debug: false,
     parentOperationDescriptorId: null,
+    invalidatingOperationsDescriptorIds: null,
     alwaysImmutable: false,
     minCacheTime: 5000,
     maxCacheTime: 60000,
+    requiredParams: {},
     ...descriptorOptions,
   };
 
@@ -51,33 +52,14 @@ const updateAsyncOperationDescriptor = (state, descriptorOptions) => {
   };
 };
 
-// validate whether the asyncOperationDescriptor exists
-
-const getAsyncOperationDescriptor = (asyncOperationDescriptors, descriptorId) => {
-  const config = asyncOperationManagerConfig.getConfig();
-  const asyncOperationDescriptor = asyncOperationDescriptors[descriptorId];
-
-  if (!asyncOperationDescriptor) {
-    config.logger.warningsCallback(`descriptorId "${descriptorId}" does not match with any registered async operation descriptor`);
-    return null;
-  }
-
-  if (asyncOperationDescriptor.debug) {
-    config.logger.verboseLoggingCallback(`Inside getAsyncOperationDescriptor for ${descriptorId}`);
-    config.logger.infoLoggingCallback('getAsyncOperationDescriptor [Data Snapshot]:', {
-      asyncOperationDescriptors,
-      asyncOperationDescriptor,
-    });
-  }
-
-  return asyncOperationDescriptor;
-};
-
 // This function will do all the work to determine if an async operation is returned as an initial async operation
 // (if it is not found in state), an asyncOperation with parentAsyncOperation metaData (recursively searched to find if the parentAsyncOperation is more
 // up-to-date) or just the asyncOperation itself if the none of the above apply.
 const getAsyncOperation = (state, asyncOperationKey, asyncOperationDescriptor, asyncOperationParams, fieldsToAdd) => {
-  const { descriptors: registeredDescriptors, operations } = state;
+  const { operations, descriptors } = state;
+
+  let parentAsyncOperation;
+  const asyncOperation = operations[asyncOperationKey] || null;
 
   const config = asyncOperationManagerConfig.getConfig();
   const fieldsToAddToAction = {
@@ -86,20 +68,6 @@ const getAsyncOperation = (state, asyncOperationKey, asyncOperationDescriptor, a
     // key for the descriptor of the asyncOperation
     descriptorId: asyncOperationDescriptor.descriptorId,
   };
-
-  let parentAsyncOperation;
-  let asyncOperation = operations[asyncOperationKey] || null;
-
-  if (asyncOperationDescriptor.parentOperationDescriptorId) {
-    // grab key, descriptor, params, and async operation for parentAsyncOperation
-    const parentAsyncOperationDescriptor = getAsyncOperationDescriptor(registeredDescriptors, asyncOperationDescriptor.parentOperationDescriptorId);
-    const parentAsyncOperationParams = getAndValidateParams(asyncOperationParams, parentAsyncOperationDescriptor);
-    const parentAsyncOperationKey = generateAsyncOperationKey(
-      asyncOperationDescriptor.parentOperationDescriptorId,
-      parentAsyncOperationParams,
-    );
-    parentAsyncOperation = getAsyncOperation(state, parentAsyncOperationKey, parentAsyncOperationDescriptor, asyncOperationParams, fieldsToAddToAction);
-  }
 
   if (asyncOperationDescriptor.debug) {
     config.logger.verboseLoggingCallback(`Inside getAsyncOperation for ${asyncOperationKey}`);
@@ -112,19 +80,54 @@ const getAsyncOperation = (state, asyncOperationKey, asyncOperationDescriptor, a
     });
   }
 
+  if (asyncOperationDescriptor.parentOperationDescriptorId) {
+    // grab key, descriptor, params, and async operation for parentAsyncOperation
+    const {
+      asyncOperationDescriptor: parentAsyncOperationDescriptor,
+      asyncOperationKey: parentAsyncOperationKey,
+    } = getAsyncOperationInfo(descriptors, asyncOperationDescriptor.parentOperationDescriptorId, asyncOperationParams);
+
+    parentAsyncOperation = getAsyncOperation(state, parentAsyncOperationKey, parentAsyncOperationDescriptor, asyncOperationParams, fieldsToAddToAction);
+  }
+
   if (!asyncOperation) {
     if (asyncOperationDescriptor.debug) {
       config.logger.verboseLoggingCallback(`asyncOperation not found with given key: ${asyncOperationKey}. Defaulting to an initial asyncOperation`);
     }
-    asyncOperation = asyncOperationDescriptor.operationType === ASYNC_OPERATION_TYPES.READ
+    return asyncOperationDescriptor.operationType === ASYNC_OPERATION_TYPES.READ
       ? initialReadAsyncOperationForAction(asyncOperationDescriptor.descriptorId, fieldsToAddToAction, parentAsyncOperation)
       : initialWriteAsyncOperationForAction(asyncOperationDescriptor.descriptorId, fieldsToAddToAction, parentAsyncOperation);
   }
 
+  if (asyncOperationDescriptor.invalidatingOperationsDescriptorIds) {
+    // we want to detect whether to invalidate the async operation if an async operation has been found
+    let invalidateOperation = false;
+
+    forEach(asyncOperationDescriptor.invalidatingOperationsDescriptorIds, (acc, descriptorId) => {
+      const {
+        asyncOperationDescriptor: invalidatingAsyncOperationDescriptor,
+        asyncOperationKey: invalidatingAsyncOperationKey,
+      } = getAsyncOperationInfo(descriptors, descriptorId, asyncOperationParams);
+
+      const invalidatingOperation = getAsyncOperation(state, invalidatingAsyncOperationKey, invalidatingAsyncOperationDescriptor, asyncOperationParams, fieldsToAddToAction);
+      if (invalidatingOperation.lastDataStatusTime.valueOf() >= asyncOperation.lastDataStatusTime.valueOf()) {
+        invalidateOperation = true;
+        return false;
+      }
+      return true;
+    });
+
+    if (invalidateOperation) {
+      return asyncOperationDescriptor.operationType === ASYNC_OPERATION_TYPES.READ
+        ? initialReadAsyncOperationForAction(asyncOperationDescriptor.descriptorId, fieldsToAddToAction)
+        : initialWriteAsyncOperationForAction(asyncOperationDescriptor.descriptorId, fieldsToAddToAction);
+    }
+  }
+
   // We want to determine whether or not to use that parentAsyncOperation metaData based on the
   // newness of it's data in comparison to the asyncOperation
-  if (parentAsyncOperation && asyncOperation) {
-    return parentAsyncOperation.lastDataStatusTime.valueOf() > asyncOperation.lastDataStatusTime.valueOf()
+  if (parentAsyncOperation) {
+    return parentAsyncOperation.lastDataStatusTime.valueOf() >= asyncOperation.lastDataStatusTime.valueOf()
       ? {
         ...asyncOperation,
         // use parent async operation metaData (lastDataStatusTime, lastFetchStatusTime. etc...)
@@ -170,5 +173,4 @@ export default {
   bulkUpdateAsyncOperations,
 
   getAsyncOperation,
-  getAsyncOperationDescriptor,
 };

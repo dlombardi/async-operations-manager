@@ -4,7 +4,6 @@ import { expect } from 'chai';
 import {
   getAsyncOperationsManagerState,
   registerAsyncOperationDescriptors,
-  getAsyncOperationDescriptor,
   getStateForOperationAfterStep,
 } from '../asyncOperationManagerUtils';
 
@@ -14,7 +13,7 @@ import {
 
 const initialState = {
   operations: {},
-}
+};
 
 describe('asyncOperationManagerUtils', () => {
   let state;
@@ -70,7 +69,9 @@ describe('asyncOperationManagerUtils', () => {
         minCacheTime: 5000,
         maxCacheTime: 60000,
       });
-      const asyncOperationDescriptor = getAsyncOperationDescriptor('FETCH_PERSON_DATA_BY_ID');
+
+      const { descriptors: registeredAsyncDescriptors } = getAsyncOperationsManagerState(state);
+      const asyncOperationDescriptor = registeredAsyncDescriptors.FETCH_PERSON_DATA_BY_ID;
       expect(asyncOperationDescriptor).to.be.an('object');
       expect(asyncOperationDescriptor).to.matchSnapshot('well formed async operation descriptor');
     });

@@ -5,6 +5,7 @@ Object {
   "alwaysImmutable": false,
   "debug": false,
   "descriptorId": "FETCH_PERSON_DATA_BY_ID",
+  "invalidatingOperationsDescriptorIds": null,
   "maxCacheTime": 60000,
   "minCacheTime": 5000,
   "operationType": "READ",
