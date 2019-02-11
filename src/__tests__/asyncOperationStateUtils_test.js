@@ -394,5 +394,45 @@ describe('asyncOperationStateUtils', () => {
       });
       expect(asyncOperation).to.matchSnapshot('well formed successful asyncOperation with parentAsyncOperation metaData two levels deep');
     });
+
+    it('should invalidate async operation if an invalidatingAsyncOperation has a resolve timestamp after async operation and is two levels deep', () => {
+      state = {
+        operations: {
+          FETCH_APPOINTMENT_DATA_111: {
+            descriptorId: 'FETCH_APPOINTMENT_DATA',
+            fetchStatus: 'SUCCESSFUL',
+            dataStatus: 'PRESENT',
+            message: null,
+            lastFetchStatusTime: '2018-09-01T19:12:46.189Z',
+            lastDataStatusTime: '2018-09-01T19:12:53.189Z',
+            appointmentId: 111,
+          },
+          FETCH_APPOINTMENT_DATA_222: {
+            descriptorId: 'FETCH_APPOINTMENT_DATA',
+            fetchStatus: 'SUCCESSFUL',
+            dataStatus: 'PRESENT',
+            message: null,
+            lastFetchStatusTime: '2018-09-21T19:13:52.189Z',
+            lastDataStatusTime: '2018-09-21T19:13:56.189Z',
+            appointmentId: 222,
+          },
+        },
+      };
+
+      const fetchAppointmentDataAsyncOperationDescriptor = {
+        descriptorId: 'FETCH_APPOINTMENT_DATA',
+        requiredParams: ['appointmentId'],
+        operationType: 'READ',
+        invalidatingOperationsDescriptorIds: ['FETCH_PERSON_DATA'],
+      };
+
+      const asyncOperation = asyncOperationStateUtils.getAsyncOperation(state, 'fetchAppointmentData_111', fetchAppointmentDataAsyncOperationDescriptor, { appointmentId: 111 });
+      expect(asyncOperation).to.be.an('object');
+      expect(asyncOperation).to.deep.include({
+        lastFetchStatusTime: 0,
+        lastDataStatusTime: 0,
+      });
+      expect(asyncOperation).to.matchSnapshot('well formed successful asyncOperation with parentAsyncOperation metaData two levels deep');
+    });
   });
 });

@@ -23,6 +23,19 @@ Object {
 }
 `;
 
+exports[`asyncOperationStateUtils getAsyncOperation should invalidate async operation if an invalidatingAsyncOperation has a resolve timestamp after async operation and is two levels deep: well formed successful asyncOperation with parentAsyncOperation metaData two levels deep 1`] = `
+Object {
+  "appointmentId": 111,
+  "dataStatus": "ABSENT",
+  "descriptorId": "FETCH_APPOINTMENT_DATA",
+  "fetchStatus": "NULL",
+  "lastDataStatusTime": 0,
+  "lastFetchFailed": false,
+  "lastFetchStatusTime": 0,
+  "message": null,
+}
+`;
+
 exports[`asyncOperationStateUtils getAsyncOperation should invalidate async operation if an invalidatingAsyncOperation has a resolve timestamp after async operation: well formed successful asyncOperation with parentAsyncOperation metaData two levels deep 1`] = `
 Object {
   "appointmentId": 111,
