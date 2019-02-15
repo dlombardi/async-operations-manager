@@ -7,7 +7,6 @@
 //
 
 import {
-  omit,
   isArray,
   isEmpty,
   reduce,
@@ -27,8 +26,7 @@ import {
 } from './asyncOperationUtils';
 
 import {
-  generateAsyncOperationKey,
-  getAndValidateParams,
+  getAsyncOperationInfo,
 } from './helpers';
 
 import {
@@ -40,25 +38,6 @@ import {
 const getAsyncOperationsManagerState = asyncOperationManagerState.getState;
 const clearAsyncOperationsManagerState = asyncOperationManagerState.clearState;
 const setAsyncOperationsManagerState = asyncOperationManagerState.setState;
-
-const getAsyncOperationDescriptor = (descriptorId) => {
-  const { descriptors } = getAsyncOperationsManagerState();
-  return asyncOperationStateUtils.getAsyncOperationDescriptor(descriptors, descriptorId);
-};
-
-const getAsyncOperationInfo = (descriptorId, params) => {
-  const asyncOperationDescriptor = getAsyncOperationDescriptor(descriptorId);
-  const asyncOperationParams = getAndValidateParams(params, asyncOperationDescriptor);
-  const asyncOperationKey = generateAsyncOperationKey(descriptorId, asyncOperationParams);
-  const otherFields = omit(params, [...asyncOperationDescriptor.requiredParams]);
-
-  return {
-    asyncOperationDescriptor,
-    asyncOperationParams,
-    asyncOperationKey,
-    otherFields,
-  };
-};
 
 const registerAsyncOperationDescriptors = (asyncOperationDescriptors, ...otherDescriptors) => {
   let newState;
@@ -87,7 +66,7 @@ const getAsyncOperation = (state, descriptorId, params, otherFields) => {
     asyncOperationDescriptor,
     asyncOperationParams,
     asyncOperationKey,
-  } = getAsyncOperationInfo(descriptorId, params);
+  } = getAsyncOperationInfo(state.descriptors, descriptorId, params);
 
   // in case operation/descriptor state is initialized in userland we pass that through
   // to the library state.
@@ -97,12 +76,13 @@ const getAsyncOperation = (state, descriptorId, params, otherFields) => {
 };
 
 const shouldRunOperation = (descriptorId, params) => {
+  const state = asyncOperationManagerState.getState();
+
   const {
     asyncOperationDescriptor,
     asyncOperationParams,
-  } = getAsyncOperationInfo(descriptorId, params);
+  } = getAsyncOperationInfo(state.descriptors, descriptorId, params);
 
-  const state = asyncOperationManagerState.getState();
   const asyncOperation = getAsyncOperation(state, descriptorId, asyncOperationParams);
 
   if (asyncOperationDescriptor.operationType === ASYNC_OPERATION_TYPES.READ && asyncOperation.fetchStatus !== FETCH_STATUS.NULL) {
@@ -142,17 +122,17 @@ const transformTypeLookup = {
 
 // this function is called in the reducer (in redux integration)
 const getStateForOperationAfterStep = (state, asyncOperationStep, descriptorId, params) => {
-  let newState;
+  let newState = asyncOperationManagerState.setState(state);
+
   const {
     asyncOperationDescriptor,
     asyncOperationParams,
     asyncOperationKey,
     otherFields,
-  } = getAsyncOperationInfo(descriptorId, params);
+  } = getAsyncOperationInfo(newState.descriptors, descriptorId, params);
 
   // in case operation/descriptor state is initialized in userland we pass that through
   // to the library state.
-  newState = asyncOperationManagerState.setState(state);
 
   const asyncOperationToTranform = getAsyncOperation(newState, descriptorId, asyncOperationParams, otherFields);
   const newAsyncOperation = transformTypeLookup[asyncOperationDescriptor.operationType](asyncOperationToTranform, asyncOperationStep, asyncOperationParams, otherFields);
@@ -168,9 +148,7 @@ export {
 
   getAsyncOperation,
   registerAsyncOperationDescriptors,
-  getAsyncOperationDescriptor,
   getStateForOperationAfterStep,
-  getAsyncOperationInfo,
 
   shouldRunOperation,
 };

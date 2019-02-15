@@ -20,5 +20,6 @@ export const asyncOperationDescriptorPropType = {
   descriptorId: PropTypes.string.isRequired,
   requiredParams: PropTypes.arrayOf(PropTypes.string),
   parentOperationDescriptorId: PropTypes.string,
+  invalidatingOperationsDescriptorIds: PropTypes.arrayOf(PropTypes.string),
   operationType: PropTypes.oneOf(_.values(ASYNC_OPERATION_TYPES)).isRequired,
 };

@@ -23,6 +23,32 @@ Object {
 }
 `;
 
+exports[`asyncOperationStateUtils getAsyncOperation should invalidate async operation if an invalidatingAsyncOperation has a resolve timestamp after async operation and is two levels deep: well formed successful asyncOperation with parentAsyncOperation metaData two levels deep 1`] = `
+Object {
+  "appointmentId": 111,
+  "dataStatus": "ABSENT",
+  "descriptorId": "FETCH_APPOINTMENT_DATA",
+  "fetchStatus": "NULL",
+  "lastDataStatusTime": 0,
+  "lastFetchFailed": false,
+  "lastFetchStatusTime": 0,
+  "message": null,
+}
+`;
+
+exports[`asyncOperationStateUtils getAsyncOperation should invalidate async operation if an invalidatingAsyncOperation has a resolve timestamp after async operation: well formed successful asyncOperation with parentAsyncOperation metaData two levels deep 1`] = `
+Object {
+  "appointmentId": 111,
+  "dataStatus": "ABSENT",
+  "descriptorId": "FETCH_APPOINTMENT_DATA",
+  "fetchStatus": "NULL",
+  "lastDataStatusTime": 0,
+  "lastFetchFailed": false,
+  "lastFetchStatusTime": 0,
+  "message": null,
+}
+`;
+
 exports[`asyncOperationStateUtils getAsyncOperation should return a pending asyncOperation: well formed pending asyncOperation 1`] = `
 Object {
   "dataStatus": "ABSENT",
@@ -55,6 +81,7 @@ Object {
   "descriptorId": "FETCH_PERSON_DATA",
   "fetchStatus": "SUCCESSFUL",
   "lastDataStatusTime": "2018-10-01T19:13:56.189Z",
+  "lastFetchFailed": false,
   "lastFetchStatusTime": "2018-10-01T19:13:52.189Z",
   "message": null,
   "personId": 111,
@@ -115,6 +142,7 @@ Object {
     "alwaysImmutable": false,
     "debug": false,
     "descriptorId": "UPDATE_PERSON_DATA",
+    "invalidatingOperationsDescriptorIds": null,
     "maxCacheTime": 60000,
     "minCacheTime": 5000,
     "operationType": "WRITE",
