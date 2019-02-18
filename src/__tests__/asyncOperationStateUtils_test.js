@@ -356,7 +356,7 @@ describe('asyncOperationStateUtils', () => {
       expect(asyncOperation).to.matchSnapshot('well formed successful asyncOperation with parentAsyncOperation metaData two levels deep');
     });
 
-    it('should invalidate async operation if an invalidatingAsyncOperation has a resolve timestamp after async operation', () => {
+    it('should invalidate an async operation if an invalidatingAsyncOperation shares the same descriptorId', () => {
       state = {
         operations: {
           FETCH_APPOINTMENT_DATA_111: {
@@ -401,35 +401,38 @@ describe('asyncOperationStateUtils', () => {
         lastFetchStatusTime: 0,
         lastDataStatusTime: 0,
       });
-      expect(asyncOperation).to.matchSnapshot('well formed successful asyncOperation with parentAsyncOperation metaData two levels deep');
+      expect(asyncOperation).to.matchSnapshot('well formed initial read async operation');
     });
 
-    it('should invalidate async operation if an invalidatingAsyncOperation has a resolve timestamp after async operation and is two levels deep', () => {
+    it('should invalidate async operation if an invalidatingAsyncOperation is a write async operation and has a fetchStatus timestamp after async operation fetchStatus timestamp', () => {
       state = {
         operations: {
-          FETCH_APPOINTMENT_DATA_111: {
-            descriptorId: 'FETCH_APPOINTMENT_DATA',
+          FETCH_CALENDAR_DATA_33: {
+            descriptorId: 'FETCH_CALENDAR_DATA',
             fetchStatus: 'SUCCESSFUL',
             dataStatus: 'PRESENT',
             message: null,
             lastFetchStatusTime: '2018-09-01T19:12:46.189Z',
             lastDataStatusTime: '2018-09-01T19:12:53.189Z',
-            appointmentId: 111,
+            orgId: 33,
           },
-          FETCH_APPOINTMENT_DATA_222: {
-            descriptorId: 'FETCH_APPOINTMENT_DATA',
+          UPDATE_APPOINTMENT_DATA_222: {
+            descriptorId: 'UPDATE_APPOINTMENT_DATA',
             fetchStatus: 'SUCCESSFUL',
-            dataStatus: 'PRESENT',
             message: null,
             lastFetchStatusTime: '2018-09-21T19:13:52.189Z',
-            lastDataStatusTime: '2018-09-21T19:13:56.189Z',
             appointmentId: 222,
           },
         },
         descriptors: {
-          FETCH_APPOINTMENT_DATA: {
-            descriptorId: 'FETCH_APPOINTMENT_DATA',
+          UPDATE_APPOINTMENT_DATA: {
+            descriptorId: 'UPDATE_APPOINTMENT_DATA',
             requiredParams: ['appointmentId'],
+            operationType: 'WRITE',
+          },
+          FETCH_CALENDAR_DATA: {
+            descriptorId: 'FETCH_CALENDAR_DATA',
+            requiredParams: ['orgId'],
             operationType: 'READ',
             invalidatingOperationsDescriptorIds: ['FETCH_APPOINTMENT_DATA'],
           },
@@ -437,19 +440,19 @@ describe('asyncOperationStateUtils', () => {
       };
 
       const fetchAppointmentDataAsyncOperationDescriptor = {
-        descriptorId: 'FETCH_APPOINTMENT_DATA',
-        requiredParams: ['appointmentId'],
+        descriptorId: 'FETCH_CALENDAR_DATA',
+        requiredParams: ['orgId'],
         operationType: 'READ',
-        invalidatingOperationsDescriptorIds: ['FETCH_APPOINTMENT_DATA'],
+        invalidatingOperationsDescriptorIds: ['UPDATE_APPOINTMENT_DATA'],
       };
 
-      const asyncOperation = asyncOperationStateUtils.getAsyncOperation(state, 'FETCH_APPOINTMENT_DATA_111', fetchAppointmentDataAsyncOperationDescriptor, { appointmentId: 111 });
+      const asyncOperation = asyncOperationStateUtils.getAsyncOperation(state, 'FETCH_APPOINTMENT_DATA_111', fetchAppointmentDataAsyncOperationDescriptor, { orgId: 33 });
       expect(asyncOperation).to.be.an('object');
       expect(asyncOperation).to.deep.include({
         lastFetchStatusTime: 0,
         lastDataStatusTime: 0,
       });
-      expect(asyncOperation).to.matchSnapshot('well formed successful asyncOperation with parentAsyncOperation metaData two levels deep');
+      expect(asyncOperation).to.matchSnapshot('well formed initial read asyncOperation');
     });
   });
 });

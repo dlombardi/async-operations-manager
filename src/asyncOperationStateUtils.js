@@ -87,7 +87,9 @@ const getAsyncOperation = (state, asyncOperationKey, asyncOperationDescriptor, a
       asyncOperationKey: parentAsyncOperationKey,
     } = getAsyncOperationInfo(descriptors, asyncOperationDescriptor.parentOperationDescriptorId, asyncOperationParams);
 
-    parentAsyncOperation = getAsyncOperation(state, parentAsyncOperationKey, parentAsyncOperationDescriptor, asyncOperationParams, fieldsToAddToAction);
+    if (parentAsyncOperationDescriptor.operationType === ASYNC_OPERATION_TYPES.READ) {
+      parentAsyncOperation = getAsyncOperation(state, parentAsyncOperationKey, parentAsyncOperationDescriptor, asyncOperationParams, fieldsToAddToAction);
+    }
   }
 
   if (!asyncOperation) {
@@ -114,19 +116,21 @@ const getAsyncOperation = (state, asyncOperationKey, asyncOperationDescriptor, a
         asyncOperationDescriptor: invalidatingAsyncOperationDescriptor,
         asyncOperationKey: invalidatingAsyncOperationKey,
       } = getAsyncOperationInfo(descriptors, descriptorId, asyncOperationParams);
-
       const invalidatingOperation = getAsyncOperation(state, invalidatingAsyncOperationKey, invalidatingAsyncOperationDescriptor, asyncOperationParams, fieldsToAddToAction);
-      if (invalidatingOperation.lastDataStatusTime.valueOf() >= asyncOperation.lastDataStatusTime.valueOf()) {
-        invalidateOperation = true;
+
+      // Handle invalidating operations with write or read operations.
+      invalidateOperation = invalidatingAsyncOperationDescriptor.operationType === ASYNC_OPERATION_TYPES.READ ?
+        invalidatingOperation.lastDataStatusTime.valueOf() >= asyncOperation.lastDataStatusTime.valueOf() :
+        invalidatingOperation.lastFetchStatusTime.valueOf() >= asyncOperation.lastFetchStatusTime.valueOf();
+
+      if (invalidateOperation) {
         return false;
       }
       return true;
     });
 
     if (invalidateOperation) {
-      return asyncOperationDescriptor.operationType === ASYNC_OPERATION_TYPES.READ
-        ? initialReadAsyncOperationForAction(asyncOperationDescriptor.descriptorId, fieldsToAddToAction)
-        : initialWriteAsyncOperationForAction(asyncOperationDescriptor.descriptorId, fieldsToAddToAction);
+      return initialReadAsyncOperationForAction(asyncOperationDescriptor.descriptorId, fieldsToAddToAction);
     }
   }
 

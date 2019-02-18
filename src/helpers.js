@@ -82,7 +82,6 @@ const getAsyncOperationDescriptor = (asyncOperationDescriptors, descriptorId) =>
 };
 
 const getAsyncOperationInfo = (descriptors, descriptorId, params) => {
-  console.log(descriptors, descriptorId);
   const asyncOperationDescriptor = getAsyncOperationDescriptor(descriptors, descriptorId);
   const asyncOperationParams = getAndValidateParams(params, asyncOperationDescriptor);
   const asyncOperationKey = generateAsyncOperationKey(descriptorId, asyncOperationParams);
