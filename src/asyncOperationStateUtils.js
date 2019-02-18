@@ -103,7 +103,13 @@ const getAsyncOperation = (state, asyncOperationKey, asyncOperationDescriptor, a
     // we want to detect whether to invalidate the async operation if an async operation has been found
     let invalidateOperation = false;
 
-    forEach(asyncOperationDescriptor.invalidatingOperationsDescriptorIds, (acc, descriptorId) => {
+    forEach(asyncOperationDescriptor.invalidatingOperationsDescriptorIds, (descriptorId) => {
+      // hanlde if an asyncOperation invalidates itself
+      if (descriptorId === asyncOperationDescriptor.descriptorId) {
+        invalidateOperation = true;
+        return false;
+      }
+
       const {
         asyncOperationDescriptor: invalidatingAsyncOperationDescriptor,
         asyncOperationKey: invalidatingAsyncOperationKey,

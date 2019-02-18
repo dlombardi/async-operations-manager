@@ -67,10 +67,8 @@ Object {
   "descriptorId": "FETCH_PERSON_DATA",
   "fetchStatus": "SUCCESSFUL",
   "lastDataStatusTime": "2018-10-01T19:23:56.189Z",
-  "lastFetchFailed": false,
   "lastFetchStatusTime": "2018-10-01T19:16:52.189Z",
   "message": null,
-  "orgId": 22,
   "personId": 111,
 }
 `;
@@ -81,7 +79,6 @@ Object {
   "descriptorId": "FETCH_PERSON_DATA",
   "fetchStatus": "SUCCESSFUL",
   "lastDataStatusTime": "2018-10-01T19:13:56.189Z",
-  "lastFetchFailed": false,
   "lastFetchStatusTime": "2018-10-01T19:13:52.189Z",
   "message": null,
   "personId": 111,

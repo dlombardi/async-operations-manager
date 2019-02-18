@@ -283,7 +283,8 @@ describe('asyncOperationStateUtils', () => {
         parentOperationDescriptorId: 'FETCH_ALL_PERSON_DATA',
       };
 
-      const asyncOperation = asyncOperationStateUtils.getAsyncOperation(state, 'fetchPersonData_111', fetchPersonDataAsyncOperationDescriptor, { personId: 111 });
+      const asyncOperation = asyncOperationStateUtils.getAsyncOperation(state, 'FETCH_PERSON_DATA_111', fetchPersonDataAsyncOperationDescriptor, { personId: 111 });
+
       expect(asyncOperation).to.be.an('object');
       expect(asyncOperation).to.deep.include({
         lastFetchStatusTime: '2018-10-01T19:13:52.189Z',
@@ -346,7 +347,7 @@ describe('asyncOperationStateUtils', () => {
         parentOperationDescriptorId: 'FETCH_ALL_PERSON_DATA_FOR_ORG',
       };
 
-      const asyncOperation = asyncOperationStateUtils.getAsyncOperation(state, 'fetchPersonData_111', fetchPersonDataAsyncOperationDescriptor, { personId: 111, orgId: 22 });
+      const asyncOperation = asyncOperationStateUtils.getAsyncOperation(state, 'FETCH_PERSON_DATA_111', fetchPersonDataAsyncOperationDescriptor, { personId: 111, orgId: 22 });
       expect(asyncOperation).to.be.an('object');
       expect(asyncOperation).to.deep.include({
         lastFetchStatusTime: '2018-10-01T19:16:52.189Z',
@@ -377,16 +378,24 @@ describe('asyncOperationStateUtils', () => {
             appointmentId: 222,
           },
         },
+        descriptors: {
+          FETCH_APPOINTMENT_DATA: {
+            descriptorId: 'FETCH_APPOINTMENT_DATA',
+            requiredParams: ['appointmentId'],
+            operationType: 'READ',
+            invalidatingOperationsDescriptorIds: ['FETCH_APPOINTMENT_DATA'],
+          },
+        },
       };
 
       const fetchAppointmentDataAsyncOperationDescriptor = {
         descriptorId: 'FETCH_APPOINTMENT_DATA',
         requiredParams: ['appointmentId'],
         operationType: 'READ',
-        invalidatingOperationsDescriptorIds: ['FETCH_PERSON_DATA'],
+        invalidatingOperationsDescriptorIds: ['FETCH_APPOINTMENT_DATA'],
       };
 
-      const asyncOperation = asyncOperationStateUtils.getAsyncOperation(state, 'fetchAppointmentData_111', fetchAppointmentDataAsyncOperationDescriptor, { appointmentId: 111 });
+      const asyncOperation = asyncOperationStateUtils.getAsyncOperation(state, 'FETCH_APPOINTMENT_DATA_111', fetchAppointmentDataAsyncOperationDescriptor, { appointmentId: 111 });
       expect(asyncOperation).to.be.an('object');
       expect(asyncOperation).to.deep.include({
         lastFetchStatusTime: 0,
@@ -417,16 +426,24 @@ describe('asyncOperationStateUtils', () => {
             appointmentId: 222,
           },
         },
+        descriptors: {
+          FETCH_APPOINTMENT_DATA: {
+            descriptorId: 'FETCH_APPOINTMENT_DATA',
+            requiredParams: ['appointmentId'],
+            operationType: 'READ',
+            invalidatingOperationsDescriptorIds: ['FETCH_APPOINTMENT_DATA'],
+          },
+        },
       };
 
       const fetchAppointmentDataAsyncOperationDescriptor = {
         descriptorId: 'FETCH_APPOINTMENT_DATA',
         requiredParams: ['appointmentId'],
         operationType: 'READ',
-        invalidatingOperationsDescriptorIds: ['FETCH_PERSON_DATA'],
+        invalidatingOperationsDescriptorIds: ['FETCH_APPOINTMENT_DATA'],
       };
 
-      const asyncOperation = asyncOperationStateUtils.getAsyncOperation(state, 'fetchAppointmentData_111', fetchAppointmentDataAsyncOperationDescriptor, { appointmentId: 111 });
+      const asyncOperation = asyncOperationStateUtils.getAsyncOperation(state, 'FETCH_APPOINTMENT_DATA_111', fetchAppointmentDataAsyncOperationDescriptor, { appointmentId: 111 });
       expect(asyncOperation).to.be.an('object');
       expect(asyncOperation).to.deep.include({
         lastFetchStatusTime: 0,
