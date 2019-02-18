@@ -5,6 +5,7 @@ import {
   every,
   keyBy,
   has,
+  isEmpty,
   isString,
   partial,
   pick,
@@ -22,23 +23,31 @@ const makeConstantsObject = (sourceValues = [], extraOverrides = {}) =>
   );
 
 
-const generateAsyncOperationKey = (descriptorId, requiredParams) => {
+const generateAsyncOperationKey = (descriptorId, params = {}) => {
   const config = asyncOperationManagerConfig.getConfig();
-  
+  let baseAsyncOperationKey = descriptorId;
   if (!descriptorId || !isString(descriptorId)) {
     config.logger.exceptionsCallback('A descriptorId string to create the async operation key was not provided');
   }
-  if (requiredParams) {
-    return `${descriptorId}_${values(requiredParams).join('_')}`;
+
+  if (!isEmpty(params)) {
+    baseAsyncOperationKey = `${baseAsyncOperationKey}_${values(params).join('_')}`;
   }
-  return descriptorId;
+
+  return baseAsyncOperationKey;
 };
 
 const getAndValidateParams = (paramsToCheck, asyncOperationDescriptor) => {
-  let asyncOperationParams = null;
+  // Pick out designated required and optional params exclusively.
+  const asyncOperationParams = {
+    ...asyncOperationDescriptor.requiredParams ? pick(paramsToCheck, asyncOperationDescriptor.requiredParams) : {},
+    ...asyncOperationDescriptor.optionalParams ? pick(paramsToCheck, asyncOperationDescriptor.optionalParams) : {},
+  };
+
   const { logger } = asyncOperationManagerConfig.getConfig();
   if (asyncOperationDescriptor.requiredParams) {
-    asyncOperationParams = asyncOperationDescriptor.requiredParams ? pick(paramsToCheck, asyncOperationDescriptor.requiredParams) : null;
+    // make sure that every requiredParams is included in the asyncOperationParams object and that
+    // none of the values are falsey
     if (!every(asyncOperationDescriptor.requiredParams, partial(has, asyncOperationParams)) || (asyncOperationParams && some(asyncOperationParams, paramValue => !paramValue))) {
       // This warning is here just to catch typos
       logger.exceptionsCallback(`

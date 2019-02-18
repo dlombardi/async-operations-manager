@@ -21,16 +21,16 @@ describe('helpers', () => {
 
   describe('generateAsyncOperationKey', () => {
     it('should create an asyncOperation key with no params', () => {
-      const asyncOperationKey = generateAsyncOperationKey('updatePersonData');
-      expect(asyncOperationKey).to.equal('updatePersonData');
+      const asyncOperationKey = generateAsyncOperationKey('UPDATE_PERSON_DATA', {});
+      expect(asyncOperationKey).to.equal('UPDATE_PERSON_DATA');
     });
     it('should create an asyncOperation key with one param', () => {
-      const asyncOperationKey = generateAsyncOperationKey('updatePersonData', { personId: 111 });
-      expect(asyncOperationKey).to.equal('updatePersonData_111');
+      const asyncOperationKey = generateAsyncOperationKey('UPDATE_PERSON_DATA', { personId: 111 });
+      expect(asyncOperationKey).to.equal('UPDATE_PERSON_DATA_111');
     });
     it('should create an asyncOperation key with multiple params', () => {
-      const asyncOperationKey = generateAsyncOperationKey('updatePersonData', { teamId: 222, personId: 111 });
-      expect(asyncOperationKey).to.equal('updatePersonData_222_111');
+      const asyncOperationKey = generateAsyncOperationKey('UPDATE_PERSON_DATA', { orgId: 222, personId: 111 });
+      expect(asyncOperationKey).to.equal('UPDATE_PERSON_DATA_222_111');
     });
     it('should throw an exception if a label is not provided', () => {
       const { logger } = asyncOperationManagerConfig.getConfig();
@@ -59,33 +59,60 @@ describe('helpers', () => {
       });
     });
 
-    it('should validate and successfully return correct asyncOperation params', () => {
+    it('should validate requiredParams and successfully return correct asyncOperation params', () => {
       const params = {
         personId: 2,
-        teamId: 10,
+        orgId: 10,
         name: 'Darien',
       };
       const asyncOperationDescriptor = {
-        requiredParams: ['personId', 'teamId'],
+        requiredParams: ['personId', 'orgId'],
       };
       const asyncOperationParams = getAndValidateParams(params, asyncOperationDescriptor);
-      expect(asyncOperationParams).to.deep.equal({ personId: 2, teamId: 10 });
+      expect(asyncOperationParams).to.deep.equal({ personId: 2, orgId: 10 });
     });
-    it('should validate and fail on an undefined param', () => {
+    it('should validate requiredParams and successfully return all correct asyncOperation params including optionalParams', () => {
+      const params = {
+        personId: 2,
+        orgId: 10,
+        age: 25,
+        name: 'Darien',
+      };
+      const asyncOperationDescriptor = {
+        requiredParams: ['personId', 'orgId'],
+        optionalParams: ['age'],
+      };
+      const asyncOperationParams = getAndValidateParams(params, asyncOperationDescriptor);
+      expect(asyncOperationParams).to.deep.equal({ personId: 2, orgId: 10, age: 25 });
+    });
+    it('should return only optionalParams', () => {
+      const params = {
+        personId: 2,
+        orgId: 10,
+        age: 25,
+        name: 'Darien',
+      };
+      const asyncOperationDescriptor = {
+        optionalParams: ['age'],
+      };
+      const asyncOperationParams = getAndValidateParams(params, asyncOperationDescriptor);
+      expect(asyncOperationParams).to.deep.equal({ age: 25 });
+    });
+    it('should validate and fail on an undefined required param', () => {
       const { logger } = asyncOperationManagerConfig.getConfig();
       
       const params = {
         personId: undefined,
-        teamId: 10,
+        orgId: 10,
         name: 'Darien',
       };
       const asyncOperationDescriptor = {
-        requiredParams: ['personId', 'teamId'],
+        requiredParams: ['personId', 'orgId'],
       };
       getAndValidateParams(params, asyncOperationDescriptor);
       expect(logger.exceptionsCallback.called).to.equal(true);
     });
-    it('should validate and fail on a missing param', () => {
+    it('should validate and fail on a missing required param', () => {
       const { logger } = asyncOperationManagerConfig.getConfig();
       
       const params = {
@@ -93,7 +120,7 @@ describe('helpers', () => {
         name: 'Darien',
       };
       const asyncOperationDescriptor = {
-        requiredParams: ['personId', 'teamId'],
+        requiredParams: ['personId', 'orgId'],
       };
       getAndValidateParams(params, asyncOperationDescriptor);
       expect(logger.exceptionsCallback.called).to.equal(true);
