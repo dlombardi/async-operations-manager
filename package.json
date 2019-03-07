@@ -5,7 +5,7 @@
   "scripts": {
     "test": "npx jest",
     "ci-tests": "npx jest -u",
-    "build": "babel src --out-dir ./lib --source-maps",
+    "build": "babel src --out-dir ./dist --source-maps",
     "coverage": "nyc mocha --require @babel/register src/",
     "sendCoverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint ."
@@ -18,9 +18,9 @@
   },
   "author": "Darien Lombardi https://github.com/dlombardi",
   "license": "MIT",
-  "main": "lib/index.js",
-  "jsnext:main": "lib/index.js",
-  "module": "lib/index.js",
+  "main": "dist/index.js",
+  "jsnext:main": "dist/index.js",
+  "module": "dist/index.js",
   "bugs": {
     "url": "https://github.com/dlombardi/async-operations-manager/issues"
   },
