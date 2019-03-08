@@ -8,12 +8,12 @@
     "build": "babel src --out-dir ./dist --source-maps",
     "coverage": "nyc mocha --require @babel/register src/",
     "sendCoverage": "nyc report --reporter=text-lcov | coveralls",
-    "lint": "eslint .",
-    "postinstall": "npm run build"
+    "lint": "eslint ."
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run test"
+      "pre-commit": "npm run test",
+      "pre-push": "npm run build"
     }
   },
   "author": "Darien Lombardi https://github.com/dlombardi",
