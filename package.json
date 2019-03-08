@@ -16,6 +16,10 @@
       "pre-push": "npm run build"
     }
   },
+  "engines": {
+    "node": "11.10.1",
+    "npm": "6.2.0"
+  },
   "author": "Darien Lombardi https://github.com/dlombardi",
   "license": "MIT",
   "main": "dist/index.js",
