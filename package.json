@@ -58,7 +58,7 @@
     "testPathIgnorePatterns": [
       "/e2e-tests/",
       "/node_modules/",
-      "/dist/",
+      "/dist/"
     ]
   },
   "dependencies": {
