@@ -24,15 +24,6 @@
   "bugs": {
     "url": "https://github.com/dlombardi/async-operations-manager/issues"
   },
-  "directories": {
-    "src": "src",
-    "dist": "dist"
-  },
-  "files": [
-    "src",
-    "dist",
-    ".babelrc"
-  ],
   "keywords": [
     "operation",
     "async",
