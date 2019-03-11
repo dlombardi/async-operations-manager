@@ -19,8 +19,6 @@
   "author": "Darien Lombardi https://github.com/dlombardi",
   "license": "MIT",
   "main": "dist/index.js",
-  "jsnext:main": "src/index.js",
-  "module": "src/index.js",
   "bugs": {
     "url": "https://github.com/dlombardi/async-operations-manager/issues"
   },
