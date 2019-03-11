@@ -4,7 +4,7 @@
   "description": "A library to generate and represent stateful metaData of an async request and as an 'operation'.   ",
   "scripts": {
     "test": "npx jest",
-    "ci-tests": "npx jest -u",
+    "ci-tests": "npx jest ./src -u",
     "build": "babel src --out-dir ./dist --source-maps",
     "coverage": "nyc mocha --require @babel/register src/",
     "sendCoverage": "nyc report --reporter=text-lcov | coveralls",
