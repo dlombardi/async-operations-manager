@@ -4,7 +4,6 @@ node_modules/
 unit-tests/
 !unit-tests/setupTestFramework
 
-
 *~
 .DS_Store
 .idea

@@ -19,18 +19,9 @@
   "author": "Darien Lombardi https://github.com/dlombardi",
   "license": "MIT",
   "main": "dist/index.js",
-  "jsnext:main": "dist/index.js",
-  "module": "dist/index.js",
   "bugs": {
     "url": "https://github.com/dlombardi/async-operations-manager/issues"
   },
-  "directories": {
-    "src": "src",
-    "test": "test"
-  },
-  "files": [
-    "src"
-  ],
   "keywords": [
     "operation",
     "async",
@@ -57,7 +48,8 @@
     "setupTestFrameworkScriptFile": "./unit-tests/setupTestFramework",
     "testPathIgnorePatterns": [
       "/e2e-tests/",
-      "/node_modules/"
+      "/node_modules/",
+      "/dist/"
     ]
   },
   "dependencies": {
