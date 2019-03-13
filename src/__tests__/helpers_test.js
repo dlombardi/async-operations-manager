@@ -112,6 +112,20 @@ describe('helpers', () => {
       getAndValidateParams(params, asyncOperationDescriptor);
       expect(logger.exceptionsCallback.called).to.equal(true);
     });
+    it('should validate and succeed on a falsey required param', () => {
+      const { logger } = asyncOperationManagerConfig.getConfig();
+      
+      const params = {
+        personId: null,
+        orgId: 10,
+        name: 'TheAceMan',
+      };
+      const asyncOperationDescriptor = {
+        requiredParams: ['personId', 'orgId'],
+      };
+      getAndValidateParams(params, asyncOperationDescriptor);
+      expect(logger.exceptionsCallback.called).to.equal(false);
+    });
     it('should validate and fail on a missing required param', () => {
       const { logger } = asyncOperationManagerConfig.getConfig();
       

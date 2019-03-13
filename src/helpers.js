@@ -7,6 +7,7 @@ import {
   has,
   isEmpty,
   isString,
+  isUndefined,
   partial,
   pick,
   omit,
@@ -47,12 +48,13 @@ const getAndValidateParams = (paramsToCheck, asyncOperationDescriptor) => {
   const { logger } = asyncOperationManagerConfig.getConfig();
   if (asyncOperationDescriptor.requiredParams) {
     // make sure that every requiredParams is included in the asyncOperationParams object and that
-    // none of the values are falsey
-    if (!every(asyncOperationDescriptor.requiredParams, partial(has, asyncOperationParams)) || (asyncOperationParams && some(asyncOperationParams, paramValue => !paramValue))) {
+    // none of the values are undefined
+    if (!every(asyncOperationDescriptor.requiredParams, partial(has, asyncOperationParams)) ||
+      (asyncOperationParams && some(asyncOperationParams, paramValue => isUndefined(paramValue)))) {
       // This warning is here just to catch typos
       logger.exceptionsCallback(`
         It looks like ${asyncOperationDescriptor.descriptorId} is missing a param/requiredParams.
-        requiredParams provided: : ${asyncOperationParams}
+        requiredParams provided: : ${Object.keys(asyncOperationParams)}
         requiredParams: : ${asyncOperationDescriptor.requiredParams}
       `);
     }
