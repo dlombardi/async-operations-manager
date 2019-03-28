@@ -129,9 +129,24 @@ describe('helpers', function () {
       (0, _helpers.getAndValidateParams)(params, asyncOperationDescriptor);
       (0, _chai.expect)(logger.exceptionsCallback.called).to.equal(true);
     });
-    it('should validate and fail on a missing required param', function () {
+    it('should validate and succeed on a falsey required param', function () {
       var _asyncOperationManage4 = _config.default.getConfig(),
           logger = _asyncOperationManage4.logger;
+
+      var params = {
+        personId: null,
+        orgId: 10,
+        name: 'TheAceMan'
+      };
+      var asyncOperationDescriptor = {
+        requiredParams: ['personId', 'orgId']
+      };
+      (0, _helpers.getAndValidateParams)(params, asyncOperationDescriptor);
+      (0, _chai.expect)(logger.exceptionsCallback.called).to.equal(false);
+    });
+    it('should validate and fail on a missing required param', function () {
+      var _asyncOperationManage5 = _config.default.getConfig(),
+          logger = _asyncOperationManage5.logger;
 
       var params = {
         personId: 2,
