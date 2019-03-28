@@ -53,12 +53,12 @@ var getAndValidateParams = function getAndValidateParams(paramsToCheck, asyncOpe
 
   if (asyncOperationDescriptor.requiredParams) {
     // make sure that every requiredParams is included in the asyncOperationParams object and that
-    // none of the values are falsey
+    // none of the values are undefined
     if (!(0, _lodash.every)(asyncOperationDescriptor.requiredParams, (0, _lodash.partial)(_lodash.has, asyncOperationParams)) || asyncOperationParams && (0, _lodash.some)(asyncOperationParams, function (paramValue) {
-      return !paramValue;
+      return (0, _lodash.isUndefined)(paramValue);
     })) {
       // This warning is here just to catch typos
-      logger.exceptionsCallback("\n        It looks like ".concat(asyncOperationDescriptor.descriptorId, " is missing a param/requiredParams.\n        requiredParams provided: : ").concat(asyncOperationParams, "\n        requiredParams: : ").concat(asyncOperationDescriptor.requiredParams, "\n      "));
+      logger.exceptionsCallback("\n        It looks like ".concat(asyncOperationDescriptor.descriptorId, " is missing a param/requiredParams.\n        requiredParams provided: : ").concat(Object.keys(asyncOperationParams), "\n        requiredParams: : ").concat(asyncOperationDescriptor.requiredParams, "\n      "));
     }
   }
 
